@@ -360,7 +360,7 @@ export default function Preinscription() {
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-500">
-              Déjà un Espace Agent SYGRH-MESRS ?{' '}
+              Déjà un Espace Agent DRH-MESRS ?{' '}
               <button
                 onClick={() => navigate('/login')}
                 className="text-orange-600 hover:text-orange-700 font-semibold transition-colors"

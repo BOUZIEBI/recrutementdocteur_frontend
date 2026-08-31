@@ -380,7 +380,7 @@ export default function HomeShowcase() {
               <div className="absolute -right-2 -bottom-8 w-16 h-16 bg-white/10 rounded-full" />
               <div className="relative">
                 <UserCheck className="w-8 h-8 text-white mb-3" />
-                <h3 className="text-xl font-bold text-white mb-1">Mon Espace Agent SYGRH-MESRS</h3>
+                <h3 className="text-xl font-bold text-white mb-1">Mon Espace Agent DRH-MESRS</h3>
                 <p className="text-white/80 text-sm leading-relaxed mb-4">
                   Accédez à vos informations et démarches administratives.
                 </p>

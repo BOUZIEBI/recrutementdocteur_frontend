@@ -103,7 +103,7 @@ export default function Login() {
               {mode === 'signin' ? 'Connexion' : 'Créer un compte'}
             </h1>
             <p className="text-white/80 text-sm">
-              Mon Espace Agent SYGRH-MESRS
+              Mon Espace Agent DRH-MESRS
             </p>
           </div>
 
