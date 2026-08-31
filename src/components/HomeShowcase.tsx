@@ -549,7 +549,7 @@ export default function HomeShowcase() {
           </div>
 
           <p className="text-gray-600 mb-8 max-w-2xl">
-            Découvrez en images les grands évènements marquants de notre institution.
+            Découvrez en images les grands évènements marquants  notre Direction des Ressources Humaines
           </p>
 
           {loadingPhotos ? (
