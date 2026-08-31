@@ -10,7 +10,6 @@ import {
   Users,
   Briefcase,
   Award,
-  TrendingUp,
   CheckCircle,
   ArrowRight,
 } from 'lucide-react';
@@ -117,9 +116,8 @@ export default function Presentation() {
       {/* Missions */}
       <section id="missions" className="py-24 bg-white scroll-mt-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+          <div className="max-w-3xl">
+            <span className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
                 <Target className="w-4 h-4" />
                 Nos missions
               </span>
@@ -146,30 +144,6 @@ export default function Presentation() {
                 ))}
               </ul>
             </div>
-
-            <div className="grid grid-cols-2 gap-5">
-              <div className="bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl p-6 text-white shadow-xl shadow-orange-500/20">
-                <Target className="w-10 h-10 mb-4" />
-                <div className="text-3xl font-bold">200+</div>
-                <div className="text-white/80 text-sm mt-1">Entreprises accompagnées</div>
-              </div>
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-lg">
-                <Users className="w-10 h-10 mb-4 text-orange-500" />
-                <div className="text-3xl font-bold text-gray-900">15K+</div>
-                <div className="text-gray-500 text-sm mt-1">Collaborateurs gérés</div>
-              </div>
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-lg">
-                <Award className="w-10 h-10 mb-4 text-orange-500" />
-                <div className="text-3xl font-bold text-gray-900">98%</div>
-                <div className="text-gray-500 text-sm mt-1">Satisfaction client</div>
-              </div>
-              <div className="bg-gray-900 rounded-2xl p-6 text-white shadow-xl">
-                <TrendingUp className="w-10 h-10 mb-4 text-orange-400" />
-                <div className="text-3xl font-bold">15+</div>
-                <div className="text-white/70 text-sm mt-1">Années d'expertise</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
