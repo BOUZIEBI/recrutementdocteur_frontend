@@ -586,7 +586,7 @@ export default function HomeShowcase() {
                       setPhotoIndex(idx);
                       setSelectedPhoto(photo);
                     }}
-                    className="group relative flex-shrink-0 w-[320px] snap-start rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-300 aspect-[4/3] cursor-pointer"
+                    className="group relative flex-shrink-0 w-[320px] snap-start rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-300 aspect-[4/3] cursor-pointer ml-1 mr-1"
                   >
                     <img
                       src={photo.image_url}
