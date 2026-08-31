@@ -182,7 +182,7 @@ export default function HomeShowcase() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Carrousel d'images défilantes — 2/3 de la largeur */}
           <div
-            className="lg:col-span-2 relative group"
+            className="lg:col-span-2 pt-2 relative group"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
