@@ -1,4 +1,4 @@
-import { Building2, Users, Briefcase, GraduationCap, CheckCircle, MapPin, Layers } from 'lucide-react';
+import { Building2, Users, Briefcase, GraduationCap, MapPin, Layers } from 'lucide-react';
 import PageBanner from '@/components/PageBanner';
 
 const sousDirections = [
@@ -52,25 +52,6 @@ export default function Presentation() {
                 chargée de la gestion, du suivi et du développement des ressources humaines
                 du Ministère.
               </p>
-              <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                Notre mission est de garantir une gestion efficiente et équitable des
-                personnels administratifs et enseignants, en veillant au respect des
-                statuts, à la promotion des compétences et à l'amélioration continue des
-                conditions de travail.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  "Gérer les carrières des personnels administratifs et enseignants",
-                  "Assurer le recrutement et l'intégration des nouveaux agents",
-                  "Promouvoir la formation et le développement professionnel",
-                  "Garantir le respect des droits et obligations des agents",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <div className="grid grid-cols-2 gap-5">
