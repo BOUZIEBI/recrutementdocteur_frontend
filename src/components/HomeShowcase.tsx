@@ -576,7 +576,7 @@ export default function HomeShowcase() {
             <>
               <div
                 ref={photosRef}
-                className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 -mb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                className="flex gap-0 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 -mb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
                 {photos.map((photo) => (
                   <button
@@ -586,7 +586,7 @@ export default function HomeShowcase() {
                       setPhotoIndex(idx);
                       setSelectedPhoto(photo);
                     }}
-                    className="group relative flex-shrink-0 w-[320px] snap-start rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-300 aspect-[4/3] cursor-pointer ml-0 mr-0"
+                    className="group relative flex-shrink-0 w-[320px] snap-start overflow-hidden shadow-sm hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-300 aspect-[4/3] cursor-pointer"
                   >
                     <img
                       src={photo.image_url}
