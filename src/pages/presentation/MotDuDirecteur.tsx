@@ -3,9 +3,9 @@ import PageBanner from '@/components/PageBanner';
 
 const director = {
   image: '/ministre_.png',
-  firstName: 'Prof. ADAMA',
-  lastName: 'DIAWARA',
-  role: "Ministre de l'Enseignement Supérieur et de la Recherche Scientifique",
+  firstName: 'Prof. FOFANA',
+  lastName: 'Alhassane',
+  role: "Directeur des Ressources Humaines",
 };
 
 export default function MotDuDirecteur() {
