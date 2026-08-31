@@ -2,7 +2,7 @@ import { Quote } from 'lucide-react';
 import PageBanner from '@/components/PageBanner';
 
 const director = {
-  image: '/ministre_.png',
+  image: '/fofana_alhassane.jpg',
   firstName: 'Prof. FOFANA',
   lastName: 'Alhassane',
   role: "Directeur des Ressources Humaines",
