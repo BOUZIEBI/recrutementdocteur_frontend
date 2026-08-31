@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes bgZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); }
+}
+
+@keyframes textMarquee {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.login-bg-zoom {
+  animation: bgZoom 25s ease-in-out infinite alternate;
+}
+
+.login-text-marquee {
+  animation: textMarquee 18s linear infinite;
+}
