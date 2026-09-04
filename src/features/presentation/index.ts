@@ -1,0 +1,10 @@
+export { default as PresentationPage } from './pages/PresentationPage';
+export { default as MissionsPage } from './pages/MissionsPage';
+export { default as VisionPage } from './pages/VisionPage';
+export { default as ValeursPage } from './pages/ValeursPage';
+export { default as HistoriquePage } from './pages/HistoriquePage';
+export { default as OrganigrammePage } from './pages/OrganigrammePage';
+export { default as FonctionnementPage } from './pages/FonctionnementPage';
+export { default as MotDuDirecteurPage } from './pages/MotDuDirecteurPage';
+export { default as ObjectifsPage } from './pages/ObjectifsPage';
+export { default as PresentationDetailPage } from './pages/PresentationDetailPage';
