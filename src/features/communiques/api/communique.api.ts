@@ -10,7 +10,6 @@ export async function fetchCommuniques(): Promise<Communique[]> {
     throw new Error(`Erreur API communiqués: ${res.status}`);
   }
   const json: ApiResponse = await res.json();
-  console.log(json.data);
 
   if (Array.isArray(json)) return json;
   if ('data' in json && Array.isArray(json.data)) return json.data;

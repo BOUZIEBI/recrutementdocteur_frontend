@@ -113,8 +113,13 @@ export default function HomeShowcase() {
     async function loadCommuniques() {
       try {
         const data = await fetchCommuniques();
-        const sorted = [...data]
-          .sort((a, b) => new Date(b.date_publication).getTime() - new Date(a.date_publication).getTime())
+        const visible = data.filter((c) => !c.is_deleted && c.statut === 'publie');
+        const sorted = [...visible]
+          .sort((a, b) => {
+            const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
+            const db = b.date_publication ? new Date(b.date_publication).getTime() : 0;
+            return db - da;
+          })
           .slice(0, 6);
         setCommuniques(sorted);
       } catch {
@@ -279,27 +284,36 @@ export default function HomeShowcase() {
               <div className="space-y-4">
                 {communiques.map((comm) => (
                   <article
-                    key={comm.id}
+                    key={comm.uid}
                     className="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:shadow-gray-900/5 hover:border-orange-200 transition-all duration-300 flex flex-col sm:flex-row sm:items-start sm:gap-6"
                   >
-                    <div className="flex items-center gap-2 text-sm text-gray-400 mb-3 sm:mb-2">
-                      <Calendar className="w-4 h-4 text-orange-500" />
-                      <time>{formatDate(comm.date_publication)}</time>
+                    <div className="flex flex-col gap-1 mb-3 sm:mb-2">
+                      {comm.reference && (
+                        <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full w-fit">
+                          {comm.reference}
+                        </span>
+                      )}
+                      {comm.date_publication && (
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <Calendar className="w-4 h-4 text-orange-500" />
+                          <time>{formatDate(comm.date_publication)}</time>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug group-hover:text-orange-600 transition-colors">
-                        {comm.titre}
+                        {comm.titre ?? comm.reference ?? 'Communiqué'}
                       </h3>
 
                       <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                        {comm.description}
+                        {comm.resume ?? comm.contenu}
                       </p>
                     </div>
 
-                    {comm.file_path && comm.file_name && (
+                    {comm.fichier_key && (
                       <a
-                        href={getFileUrl(comm.file_path)}
+                        href={getFileUrl(comm.fichier_key)}
                         download
                         className="inline-flex items-center gap-2 self-start text-sm font-medium text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-4 py-2 rounded-lg transition-colors"
                       >
