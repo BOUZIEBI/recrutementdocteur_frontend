@@ -63,30 +63,34 @@ export default function ChatAssistant() {
   };
 
   return (
-    <>
-      {/* Bulle flottante */}
-      <button
-        onClick={() => setOpen(!open)}
-        aria-label={open ? 'Fermer l assistant' : 'Ouvrir l assistant'}
-        className={`fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${
-          open
-            ? 'bg-gray-800 rotate-90'
-            : 'bg-orange-500 hover:bg-orange-600 hover:scale-110 animate-pulse'
-        }`}
-      >
-        {open ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <MessageCircle className="w-7 h-7 text-white" />
-        )}
-        {!open && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
-        )}
-      </button>
+    /* Conteneur fixe pleine largeur -> inner max-w-7xl aligné sur le conteneur du site.
+       La bulle et la fenêtre sont en absolute par rapport à ce inner,
+       donc alignées sur max-w-7xl tout en restant fixées à l'écran. */
+    <div className="fixed inset-0 z-50 pointer-events-none">
+      <div className="relative max-w-7xl mx-auto w-full h-full">
+        {/* Bulle flottante */}
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label={open ? 'Fermer l assistant' : 'Ouvrir l assistant'}
+          className={`pointer-events-auto absolute bottom-5 right-5 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${
+            open
+              ? 'bg-gray-800 rotate-90'
+              : 'bg-orange-500 hover:bg-orange-600 hover:scale-110 animate-pulse'
+          }`}
+        >
+          {open ? (
+            <X className="w-6 h-6 text-white" />
+          ) : (
+            <MessageCircle className="w-7 h-7 text-white" />
+          )}
+          {!open && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
+          )}
+        </button>
 
-      {/* Fenêtre de conversation */}
-      {open && (
-        <div className="fixed bottom-24 right-5 z-50 w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in">
+        {/* Fenêtre de conversation */}
+        {open && (
+          <div className="pointer-events-auto absolute bottom-24 right-5 w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in">
           {/* En-tête */}
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-4 flex items-center gap-3">
             <div className="bg-white/20 p-2 rounded-xl">
@@ -196,6 +200,7 @@ export default function ChatAssistant() {
           </div>
         </div>
       )}
-    </>
+      </div>
+    </div>
   );
 }
