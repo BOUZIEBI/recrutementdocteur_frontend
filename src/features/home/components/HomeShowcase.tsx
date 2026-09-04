@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,11 +16,9 @@ import {
   LogIn,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { fetchActualites } from '@/features/actualites';
-import type { Actualite } from '@/features/actualites';
-import { fetchCommuniques } from '@/features/communiques';
-import type { Communique } from '@/features/communiques';
-import { fetchPhotos } from '@/features/phototheque';
+import { useActualites } from '@/features/actualites';
+import { useCommuniques } from '@/features/communiques';
+import { usePhotos } from '@/features/phototheque';
 import type { Photothèque } from '@/features/phototheque';
 import { services as allServices } from '@/features/services';
 
@@ -82,18 +80,28 @@ function getFileUrl(filePath: string): string {
 export default function HomeShowcase() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [communiques, setCommuniques] = useState<Communique[]>([]);
-  const [loadingCommuniques, setLoadingCommuniques] = useState(true);
   const [showAllServices, setShowAllServices] = useState(false);
-  const [actualites, setActualites] = useState<Actualite[]>([]);
-  const [loadingActualites, setLoadingActualites] = useState(true);
   const actualitesRef = useRef<HTMLDivElement>(null);
   const photosRef = useRef<HTMLDivElement>(null);
-  const [photos, setPhotos] = useState<Photothèque[]>([]);
-  const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<Photothèque | null>(null);
   const [photoIndex, setPhotoIndex] = useState(0);
   const navigate = useNavigate();
+
+  const { data: communiqueData, isLoading: loadingCommuniques } = useCommuniques();
+  const { data: actualites = [], isLoading: loadingActualites } = useActualites(8);
+  const { data: photos = [], isLoading: loadingPhotos } = usePhotos();
+
+  const communiques = useMemo(() => {
+    if (!communiqueData) return [];
+    const visible = communiqueData.filter((c) => !c.is_deleted && c.statut === 'publie');
+    return [...visible]
+      .sort((a, b) => {
+        const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
+        const db = b.date_publication ? new Date(b.date_publication).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 6);
+  }, [communiqueData]);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -108,46 +116,6 @@ export default function HomeShowcase() {
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
   }, [isPaused, next]);
-
-  useEffect(() => {
-    async function loadCommuniques() {
-      try {
-        const data = await fetchCommuniques();
-        const visible = data.filter((c) => !c.is_deleted && c.statut === 'publie');
-        const sorted = [...visible]
-          .sort((a, b) => {
-            const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
-            const db = b.date_publication ? new Date(b.date_publication).getTime() : 0;
-            return db - da;
-          })
-          .slice(0, 6);
-        setCommuniques(sorted);
-      } catch {
-        setCommuniques([]);
-      } finally {
-        setLoadingCommuniques(false);
-      }
-    }
-    loadCommuniques();
-  }, []);
-
-  useEffect(() => {
-    async function loadActualites() {
-      const data = await fetchActualites(8);
-      setActualites(data);
-      setLoadingActualites(false);
-    }
-    loadActualites();
-  }, []);
-
-  useEffect(() => {
-    async function loadPhotos() {
-      const data = await fetchPhotos();
-      setPhotos(data);
-      setLoadingPhotos(false);
-    }
-    loadPhotos();
-  }, []);
 
   const scrollActualites = (direction: 'left' | 'right') => {
     const container = actualitesRef.current;

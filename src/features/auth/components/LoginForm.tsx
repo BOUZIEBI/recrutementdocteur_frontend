@@ -164,7 +164,7 @@ export default function LoginForm() {
                 <>
                   Déjà inscrit ?{' '}
                   <button
-                    onClick={() => { setMode('signin'); setError(null); setSuccess(null); }}
+                    onClick={() => { setMode('signin'); }}
                     className="text-orange-600 hover:text-orange-700 font-semibold transition-colors"
                   >
                     Se connecter

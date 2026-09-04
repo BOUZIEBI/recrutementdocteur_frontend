@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Calendar,
@@ -7,8 +6,7 @@ import {
   ExternalLink,
   Share2,
 } from 'lucide-react';
-import { fetchActualiteById } from '../api/actualite.api';
-import type { Actualite } from '../types/actualite.types';
+import { useActualiteById } from '../hooks/useActualites';
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('fr-FR', {
@@ -21,29 +19,9 @@ function formatDate(dateStr: string): string {
 export default function ActualiteDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [actualite, setActualite] = useState<Actualite | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+  const { data: actualite, isLoading } = useActualiteById(id);
 
-  useEffect(() => {
-    async function load() {
-      if (!id) {
-        setNotFound(true);
-        setLoading(false);
-        return;
-      }
-      const data = await fetchActualiteById(id);
-      if (!data) {
-        setNotFound(true);
-      } else {
-        setActualite(data);
-      }
-      setLoading(false);
-    }
-    load();
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="pt-0 pb-24 bg-gray-50 min-h-[60vh]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +38,7 @@ export default function ActualiteDetailPage() {
     );
   }
 
-  if (notFound || !actualite) {
+  if (!actualite) {
     return (
       <div className="pt-0 pb-24 bg-gray-50 min-h-[60vh]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

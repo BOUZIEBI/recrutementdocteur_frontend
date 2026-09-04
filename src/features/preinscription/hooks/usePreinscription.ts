@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { uploadPhoto, submitPreinscription } from '../api/preinscription.api';
+import { useCreatePreinscription } from './useCreatePreinscription';
+import type { PreinscriptionData } from '../types/preinscription.types';
 
 export function usePreinscription() {
   const navigate = useNavigate();
@@ -15,22 +16,29 @@ export function usePreinscription() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const mutation = useCreatePreinscription();
+
+  const error = validationError ?? (mutation.isError
+    ? mutation.error instanceof Error
+      ? mutation.error.message
+      : 'Une erreur est survenue.'
+    : null);
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      setError('Veuillez sélectionner un fichier image.');
+      setValidationError('Veuillez sélectionner un fichier image.');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setError('La photo ne doit pas dépasser 5 Mo.');
+      setValidationError('La photo ne doit pas dépasser 5 Mo.');
       return;
     }
-    setError(null);
+    setValidationError(null);
     setPhoto(file);
     setPhotoPreview(URL.createObjectURL(file));
   }
@@ -51,44 +59,36 @@ export function usePreinscription() {
     removePhoto();
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setValidationError(null);
     setSuccess(null);
 
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas.');
+      setValidationError('Les mots de passe ne correspondent pas.');
       return;
     }
     if (password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères.');
+      setValidationError('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
 
-    setLoading(true);
-    try {
-      let photoUrl: string | null = null;
-      if (photo) {
-        photoUrl = await uploadPhoto(photo);
-      }
+    const payload: PreinscriptionData & { photo?: File | null } = {
+      matricule,
+      date_naissance: dateNaissance,
+      numero_piece: numeroPiece,
+      email,
+      mot_de_passe: password,
+      photo_url: null,
+      photo,
+    };
 
-      await submitPreinscription({
-        matricule,
-        date_naissance: dateNaissance,
-        numero_piece: numeroPiece,
-        email,
-        mot_de_passe: password,
-        photo_url: photoUrl,
-      });
-
-      setSuccess('Votre demande de préinscription a été envoyée avec succès. Elle sera traitée par l\'administration.');
-      resetForm();
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Une erreur est survenue.';
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
+    mutation.mutate(payload, {
+      onSuccess: () => {
+        setSuccess('Votre demande de préinscription a été envoyée avec succès. Elle sera traitée par l\'administration.');
+        resetForm();
+      },
+    });
   }
 
   return {
@@ -102,7 +102,9 @@ export function usePreinscription() {
     photo, photoPreview,
     showPassword, setShowPassword,
     showConfirmPassword, setShowConfirmPassword,
-    loading, error, success,
+    loading: mutation.isPending,
+    error,
+    success,
     handlePhotoChange, removePhoto, handleSubmit,
   };
 }
