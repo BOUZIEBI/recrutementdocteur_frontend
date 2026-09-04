@@ -57,8 +57,8 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
-        <ChatAssistant />
       </div>
+      <ChatAssistant />
     </div>
   );
 }

@@ -68,7 +68,7 @@ export default function ChatAssistant() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Fermer l assistant' : 'Ouvrir l assistant'}
-        className={`absolute bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${
+        className={`fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${
           open
             ? 'bg-gray-800 rotate-90'
             : 'bg-orange-500 hover:bg-orange-600 hover:scale-110 animate-pulse'
@@ -86,7 +86,7 @@ export default function ChatAssistant() {
 
       {/* Fenêtre de conversation */}
       {open && (
-        <div className="absolute bottom-24 right-5 z-50 w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in">
+        <div className="fixed bottom-24 right-5 z-50 w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in">
           {/* En-tête */}
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-4 flex items-center gap-3">
             <div className="bg-white/20 p-2 rounded-xl">
