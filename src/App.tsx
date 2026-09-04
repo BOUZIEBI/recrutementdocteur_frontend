@@ -21,6 +21,7 @@ import Sygrhes from '@/pages/Sygrhes';
 import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Preinscription from '@/pages/Preinscription';
+import ChatAssistant from '@/components/ChatAssistant';
 
 function Home() {
   return <HomeShowcase />;
@@ -57,6 +58,7 @@ export default function App() {
         </main>
         <Footer />
       </div>
+      <ChatAssistant />
     </div>
   );
 }

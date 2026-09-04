@@ -19,3 +19,12 @@
 .login-text-marquee {
   animation: textMarquee 18s linear infinite;
 }
+
+@keyframes chatIn {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-in {
+  animation: chatIn 0.25s ease-out;
+}
