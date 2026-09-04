@@ -20,6 +20,5 @@ export async function fetchCommuniques(): Promise<Communique[]> {
 
   if (Array.isArray(json)) return json;
   if ('data' in json && Array.isArray(json.data)) return json.data;
-  if ('communiques' in json && Array.isArray(json.communiques)) return json.communiques;
   return [];
 }
