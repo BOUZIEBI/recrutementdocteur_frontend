@@ -16,7 +16,8 @@ import {
   LogIn,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, type Communiqué, type Actualité, type Photothèque } from '@/lib/supabase';
+import { supabase, type Actualité, type Photothèque } from '@/lib/supabase';
+import { fetchCommuniques, type Communique } from '@/lib/communiquesApi';
 import { services as allServices } from '@/data/services';
 
 const slides = [
@@ -64,7 +65,7 @@ const director = {
 export default function HomeShowcase() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [communiques, setCommuniques] = useState<Communiqué[]>([]);
+  const [communiques, setCommuniques] = useState<Communique[]>([]);
   const [loadingCommuniques, setLoadingCommuniques] = useState(true);
   const [showAllServices, setShowAllServices] = useState(false);
   const [actualites, setActualites] = useState<Actualité[]>([]);
@@ -92,21 +93,20 @@ export default function HomeShowcase() {
   }, [isPaused, next]);
 
   useEffect(() => {
-    async function fetchCommuniques() {
-      const { data, error } = await supabase
-        .from('communiques')
-        .select('id, titre, description, date_publication, file_path, file_name')
-        .order('date_publication', { ascending: false })
-        .limit(6);
-
-      if (error) {
+    async function fetchCommuniquesData() {
+      try {
+        const data = await fetchCommuniques();
+        const sorted = [...data]
+          .sort((a, b) => new Date(b.date_publication).getTime() - new Date(a.date_publication).getTime())
+          .slice(0, 6);
+        setCommuniques(sorted);
+      } catch {
+        setCommuniques([]);
+      } finally {
         setLoadingCommuniques(false);
-        return;
       }
-      setCommuniques(data as Communiqué[]);
-      setLoadingCommuniques(false);
     }
-    fetchCommuniques();
+    fetchCommuniquesData();
   }, []);
 
   useEffect(() => {
@@ -165,6 +165,7 @@ export default function HomeShowcase() {
   };
 
   function getFileUrl(filePath: string): string {
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) return filePath;
     return `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/communiques/${filePath}`;
   }
 
