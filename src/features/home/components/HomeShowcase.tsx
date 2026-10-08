@@ -15,47 +15,18 @@ import {
   ZoomIn,
   LogIn,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useActualites } from '@/features/actualites';
-import { useCommuniques } from '@/features/communiques';
-import { usePhotos } from '@/features/phototheque';
-import type { Photothèque } from '@/features/phototheque';
-import { services as allServices } from '@/features/services';
+import { data, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useCommuniqueStore } from '@/store/useCommuniqueStore';
+import { useActualiteStore } from '@/store/useActualiteStore';
+import { usePhotothequeStore } from '@/store/usePhotothequeStore';
+import { useNationaliteStore } from '@/store/useNationaliteStore';
+import type { Phototheque } from '@/features/phototheque';
+import { useServiceStore } from '@/store/useServiceStore';
+import { getMediaUrl } from '@/shared/services/mediaService';
+import { useCryptoStore } from '@/store/useCryptoStore';
+import { useGenreStore } from '@/store/useGenreStore';
 
-const slides = [
-  {
-    image: 'https://images.pexels.com/photos/1181738/pexels-photo-1181738.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    title: 'Réunion stratégique RH',
-    text: "Nos experts accompagnent vos équipes dans l'élaboration et la mise en place de stratégies RH efficaces et adaptées à votre secteur d'activité.",
-  },
-  {
-    image: 'https://images.pexels.com/photos/7698712/pexels-photo-7698712.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    title: 'Formation des collaborateurs',
-    text: "Nous concevons des programmes de formation sur mesure pour développer les compétences de vos employés et renforcer leur engagement au quotidien.",
-  },
-  {
-    image: 'https://images.pexels.com/photos/20752572/pexels-photo-20752572.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    title: 'Conseil et accompagnement',
-    text: "Notre équipe de consultants vous guide dans la prise de décisions RH clés : recrutement, mobilité, gestion de carrière et transformation organisationnelle.",
-  },
-  {
-    image: 'https://images.pexels.com/photos/7108454/pexels-photo-7108454.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    title: 'Collaboration et teamwork',
-    text: "Nous croyons que la réussite d'une entreprise repose sur la cohésion de ses équipes. Nous mettons tout en œuvre pour créer un climat de confiance et de collaboration.",
-  },
-  {
-    image: 'https://images.pexels.com/photos/7433869/pexels-photo-7433869.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    title: 'Gestion administrative',
-    text: "Confiez-nous la gestion administrative de votre personnel : contrats, paie, déclarations sociales. Nous garantissons conformité et sérénité au quotidien.",
-  },
-];
-
-const services = allServices.map((s) => ({
-  icon: s.icon,
-  title: s.title,
-  desc: s.desc,
-  slug: s.slug,
-}));
 
 const director = {
   image: '/ministre_.png',
@@ -77,23 +48,98 @@ function getFileUrl(filePath: string): string {
   return `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/communiques/${filePath}`;
 }
 
+function CommuniqueResume({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isTruncated = text.length > 200 && !isExpanded;
+
+  return (
+    <p className="text-sm text-gray-600 leading-relaxed mb-4">
+      {isTruncated ? text.slice(0, 200) : text}
+      {isTruncated && (
+        <>
+          {'... '}
+          <button
+            type="button"
+            onClick={() => setIsExpanded(true)}
+            aria-expanded={isExpanded}
+            className="font-medium text-orange-600 hover:text-orange-700 underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-600"
+          >
+            Lire plus
+          </button>
+        </>
+      )}
+    </p>
+  );
+}
+
 export default function HomeShowcase() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showAllServices, setShowAllServices] = useState(false);
   const actualitesRef = useRef<HTMLDivElement>(null);
+  const [actualitesPaused, setActualitesPaused] = useState(false);
   const photosRef = useRef<HTMLDivElement>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<Photothèque | null>(null);
+  
+  const [selectedPhoto, setSelectedPhoto] = useState<Phototheque | null>(null);
   const [photoIndex, setPhotoIndex] = useState(0);
   const navigate = useNavigate();
+  const auth = useAuthStore((state) => state.auth);
+  
+  const initialized = useCryptoStore((state) => state.initialized);
+  const loadAuth = useAuthStore((state) => state.loadAuth);
 
-  const { data: communiqueData, isLoading: loadingCommuniques } = useCommuniques();
-  const { data: actualites = [], isLoading: loadingActualites } = useActualites(8);
-  const { data: photos = [], isLoading: loadingPhotos } = usePhotos();
+  useEffect(() => {
+    if (!initialized ||  auth) return;
+    void loadAuth();
+  }, [initialized, auth, loadAuth]);
+
+  const openAgentSpace = () => {
+    if (auth?.data?.is_active === true) {
+      navigate('/fiche-identification/informations-generales');
+    } else {
+      navigate('/login');
+    }
+  };
+
+
+
+  const communiqueData = useCommuniqueStore((state) => state.communiques);
+  const loadingCommuniques = useCommuniqueStore(
+    (state) => state.loading || (!state.loaded && !state.error),
+  );
+  const communiquesError = useCommuniqueStore((state) => state.error);
+  const loadCommuniques = useCommuniqueStore((state) => state.loadCommuniques);
+
+  const actualiteData = useActualiteStore((state) => state.actualites);
+  const loadingActualites = useActualiteStore(
+    (state) => state.loading || (!state.loaded && !state.error),
+  );
+  const actualitesError = useActualiteStore((state) => state.error);
+  const loadActualites = useActualiteStore((state) => state.loadActualites);
+
+  const serviceData = useServiceStore((state) => state.services);
+  const loadingServices = useServiceStore(
+    (state) => state.loading || (!state.loaded && !state.error),
+  );
+  const servicesError = useServiceStore((state) => state.error);
+  const loadServices = useServiceStore((state) => state.loadServices);
+
+  const photothequeData = usePhotothequeStore((state) => state.phototheques);
+  const loadingPhototheques = usePhotothequeStore(
+    (state) => state.loading || (!state.loaded && !state.error),
+  );
+  const photothequesError = usePhotothequeStore((state) => state.error);
+  const loadPhototheques = usePhotothequeStore((state) => state.loadPhototheques);
+
+
+
+  useEffect(() => {
+    void loadCommuniques();
+  }, [loadCommuniques]);
 
   const communiques = useMemo(() => {
     if (!communiqueData) return [];
-    const visible = communiqueData.filter((c) => !c.is_deleted && c.statut === 'publie');
+    const visible = communiqueData.filter((c) => !c.is_deleted && ( c.statut === 'publie' || c.statut === 'brouillon'));
     return [...visible]
       .sort((a, b) => {
         const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
@@ -103,29 +149,116 @@ export default function HomeShowcase() {
       .slice(0, 6);
   }, [communiqueData]);
 
+
+  useEffect(() => {
+    void loadPhototheques();
+  }, [loadPhototheques]);
+
+  const phototheques = useMemo(() => {
+    if (!photothequeData) return [];
+    const visible = photothequeData.filter((c) => !c.is_deleted && ( c.statut === 'publie' || c.statut === 'brouillon'));
+    return [...visible]
+      .sort((a, b) => {
+        const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
+        const db = b.date_publication ? new Date(b.date_publication).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 6);
+  }, [photothequeData]);
+
+
+  useEffect(() => {
+    void loadActualites();
+  }, [loadActualites]);
+
+  const actualites = useMemo(() => {
+      const visible = actualiteData.filter((c) => !c.is_deleted && (c.categorie_actualite?.code ==="DERNIEREACTUALITE") && ( c.statut === 'publie' || c.statut === 'brouillon'));
+      return [...visible]
+      .sort((a, b) => {
+        const da = a.date_publication ? new Date(a.date_publication).getTime() : 0;
+        const db = b.date_publication ? new Date(b.date_publication).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 6);
+  }, [actualiteData]);
+
+  const slides = useMemo(() => actualiteData
+    .filter((actualite) => !actualite.is_deleted
+      && actualite.categorie_actualite?.code === 'ACTUALITESPECIALE'
+      && (actualite.statut === 'publie' || actualite.statut === 'brouillon'))
+    .sort((a, b) => (Date.parse(b.date_publication) || 0) - (Date.parse(a.date_publication) || 0))
+    .map((actualite) => ({
+      uid: actualite.uid,
+      image: actualite.fichier_url || (actualite.fichier_key ? getMediaUrl(actualite.fichier_key) : null),
+      title: actualite.titre,
+      alt: actualite.image_alt || actualite.titre,
+      text: actualite.resume || actualite.contenu,
+    })), [actualiteData]);
+
+  useEffect(() => {
+    setCurrent(0);
+  }, [slides]);
+
   const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  }, []);
+    setCurrent((prev) => slides.length ? (prev + 1) % slides.length : 0);
+  }, [slides.length]);
 
   const prev = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrent((prev) => slides.length ? (prev - 1 + slides.length) % slides.length : 0);
   };
 
   useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(next, 5000);
+    if (isPaused || slides.length < 2) return;
+    const timer = setInterval(next, 3000);
     return () => clearInterval(timer);
-  }, [isPaused, next]);
+  }, [isPaused, next, slides.length]);
 
-  const scrollActualites = (direction: 'left' | 'right') => {
+  const scrollActualites = useCallback((direction: 'left' | 'right') => {
     const container = actualitesRef.current;
     if (!container) return;
-    const scrollAmount = 340;
-    container.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth',
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    if (maxScroll <= 1) return;
+
+    const card = container.firstElementChild as HTMLElement | null;
+    const gap = Number.parseFloat(window.getComputedStyle(container).columnGap) || 0;
+    const step = (card?.getBoundingClientRect().width ?? container.clientWidth) + gap;
+    const atStart = container.scrollLeft <= 1;
+    const atEnd = container.scrollLeft >= maxScroll - 1;
+    const target = direction === 'right'
+      ? (atEnd ? 0 : Math.min(container.scrollLeft + step, maxScroll))
+      : (atStart ? maxScroll : Math.max(container.scrollLeft - step, 0));
+
+    container.scrollTo({
+      left: target,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    if (loadingActualites || actualitesError || actualitesPaused || actualites.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) scrollActualites('right');
+    }, 2000);
+    return () => window.clearInterval(timer);
+  }, [loadingActualites, actualitesError, actualitesPaused, actualites.length, scrollActualites]);
+
+
+
+  const services = useMemo(() => {
+      const visible = serviceData.filter((c) => !c.is_deleted && ( c.statut === 'publie' || c.statut === 'brouillon'));
+      return [...visible]
+      .sort((a, b) => {
+        const da = a.cree_le ? new Date(a.cree_le).getTime() : 0;
+        const db = b.cree_le ? new Date(b.cree_le).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 6);
+  }, [serviceData]);
+
+  useEffect(() => {
+    void loadServices();
+  }, [loadServices]);
 
   const scrollPhotos = (direction: 'left' | 'right') => {
     const container = photosRef.current;
@@ -138,28 +271,35 @@ export default function HomeShowcase() {
   };
 
   return (
-    <section className="pt-0 pb-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pt-0 pb-24 bg-gray-50 nouvelles-recentes">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-3 gap-8">
           <div
             className="lg:col-span-2 pt-2 relative group"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-gray-900/20 aspect-[16/10] bg-gray-200">
+            <div className="actualites-speciales relative rounded-3xl overflow-hidden shadow-2xl shadow-gray-900/20 aspect-[16/10] bg-gray-200">
+              {slides.length === 0 && (
+                <div role={actualitesError ? 'alert' : 'status'} className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center text-gray-600">
+                  <p>{loadingActualites ? 'Chargement des actualités spéciales…' : actualitesError || 'Aucune actualité spéciale disponible pour le moment.'}</p>
+                  {actualitesError && <button type="button" onClick={() => void loadActualites(true)} className="text-orange-600 font-semibold">Réessayer</button>}
+                </div>
+              )}
               {slides.map((slide, i) => (
                 <div
-                  key={i}
+                  key={slide.uid}
+                  aria-hidden={i !== current}
                   className={`absolute inset-0 transition-opacity duration-700 ${
                     i === current ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <img
+                  {slide.image ? <img
                     src={slide.image}
-                    alt={slide.title}
+                    alt={slide.alt}
                     className="w-full h-full object-cover"
                     loading={i === 0 ? 'eager' : 'lazy'}
-                  />
+                  /> : <div className="w-full h-full bg-gray-600 flex items-center justify-center"><Newspaper className="w-16 h-16 text-white/50" /></div>}
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                     <h3 className="text-white text-xl sm:text-2xl font-bold mb-2">
@@ -172,6 +312,7 @@ export default function HomeShowcase() {
                 </div>
               ))}
 
+              {slides.length > 1 && <>
               <button
                 onClick={prev}
                 aria-label="Image précédente"
@@ -201,18 +342,19 @@ export default function HomeShowcase() {
                   />
                 ))}
               </div>
+              </>}
             </div>
           </div>
 
-          <div className="flex flex-col">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-gray-900/20 h-[450px] group">
+          <div className="flex flex-col pt-0 lg:pt-0">
+            <div className="relative rounded-3xl mt-0 lg:mt-2 overflow-hidden shadow-2xl shadow-gray-900/20 h-[470px] group">
               <img
                 src={director.image}
                 alt={`${director.firstName} ${director.lastName}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover mt-4 lg:mt-0 transition-transform duration-500 group-hover:scale-105"
               />
             </div>
-            <div className="mt-2 rounded-2xl p-5 text-center shadow-lg" style={{ backgroundColor: '#133458' }}>
+            <div className="mt-1 rounded-2xl p-5 text-center shadow-lg" style={{ backgroundColor: '#133458' }}>
               <h3 className="text-white text-xl font-bold leading-tight mb-1">
                 {director.firstName} {director.lastName}
               </h3>
@@ -243,6 +385,17 @@ export default function HomeShowcase() {
                   </div>
                 ))}
               </div>
+            ) : communiquesError ? (
+              <div role="alert" className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
+                <p className="text-red-600">{communiquesError}</p>
+                <button
+                  type="button"
+                  onClick={() => void loadCommuniques(true)}
+                  className="mt-4 font-semibold text-orange-600 hover:text-orange-700"
+                >
+                  Réessayer
+                </button>
+              </div>
             ) : communiques.length === 0 ? (
               <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
                 <FileText className="w-10 h-10 text-gray-300 mx-auto mb-3" />
@@ -251,6 +404,7 @@ export default function HomeShowcase() {
             ) : (
               <div className="space-y-4">
                 {communiques.map((comm) => (
+                  
                   <article
                     key={comm.uid}
                     className="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:shadow-gray-900/5 hover:border-orange-200 transition-all duration-300 flex flex-col sm:flex-row sm:items-start sm:gap-6"
@@ -274,15 +428,13 @@ export default function HomeShowcase() {
                         {comm.titre ?? comm.reference ?? 'Communiqué'}
                       </h3>
 
-                      <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                        {comm.resume ?? comm.contenu}
-                      </p>
+                      <CommuniqueResume text={comm.resume ?? comm.contenu} />
                     </div>
 
-                    {comm.fichier_key && (
+                    {comm.fichier_url && (
                       <a
-                        href={getFileUrl(comm.fichier_key)}
-                        download
+                        href={comm.fichier_url}
+                        target='_blank'
                         className="inline-flex items-center gap-2 self-start text-sm font-medium text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-4 py-2 rounded-lg transition-colors"
                       >
                         <Download className="w-4 h-4" />
@@ -296,10 +448,8 @@ export default function HomeShowcase() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div
-              onClick={() => navigate('/recrutement')}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-            >
+
+            <div onClick={() => navigate('/recrutement')} className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full" />
               <div className="absolute -right-2 -bottom-8 w-16 h-16 bg-white/10 rounded-full" />
               <div className="relative">
@@ -328,10 +478,7 @@ export default function HomeShowcase() {
               </div>
             </div>
 
-            <div
-              onClick={() => navigate('/login')}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-            >
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full" />
               <div className="absolute -right-2 -bottom-8 w-16 h-16 bg-white/10 rounded-full" />
               <div className="relative">
@@ -340,17 +487,26 @@ export default function HomeShowcase() {
                 <p className="text-white/80 text-sm leading-relaxed mb-4">
                   Accédez à vos informations et démarches administratives.
                 </p>
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-white bg-white/20 px-4 py-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <a onClick={openAgentSpace} className="inline-flex items-center gap-2 text-sm font-medium text-white bg-white/20 px-4 py-2 rounded-lg group-hover:bg-white/30 transition-colors">
                   <LogIn className="w-4 h-4" />
                   ME CONNECTER A MON ESPACE
-                </span>
+                </a>
               </div>
             </div>
+
           </div>
         </div>
 
-        <div className="mt-20">
-          <div className="flex items-center justify-between mb-8">
+        <div
+          className="mt-20 min-w-0 max-w-full"
+          onMouseEnter={() => setActualitesPaused(true)}
+          onMouseLeave={() => setActualitesPaused(false)}
+          onFocusCapture={() => setActualitesPaused(true)}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setActualitesPaused(false);
+          }}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-8 bg-orange-500 rounded-full" />
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Dernières actualités</h2>
@@ -390,6 +546,17 @@ export default function HomeShowcase() {
                 </div>
               ))}
             </div>
+          ) : actualitesError ? (
+            <div role="alert" className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
+              <p className="text-red-600">{actualitesError}</p>
+              <button
+                type="button"
+                onClick={() => void loadActualites(true)}
+                className="mt-4 font-semibold text-orange-600 hover:text-orange-700"
+              >
+                Réessayer
+              </button>
+            </div>
           ) : actualites.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
               <Newspaper className="w-10 h-10 text-gray-300 mx-auto mb-3" />
@@ -398,19 +565,20 @@ export default function HomeShowcase() {
           ) : (
             <div
               ref={actualitesRef}
-              className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 -mb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+              className="flex w-full min-w-0 max-w-full gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 -mb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             >
-              {actualites.map((act) => (
+              {actualites.map((actualite) => (
                 <article
-                  key={act.id}
-                  onClick={() => navigate(`/actualites/${act.id}`)}
+                  key={actualite.uid}
+                  onClick={() => navigate(`/actualites/${actualite.uid}`)}
                   className="group flex-shrink-0 w-[300px] snap-start bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-900/5 hover:border-orange-200 transition-all duration-300 overflow-hidden flex flex-col cursor-pointer"
                 >
-                  {act.image_url ? (
+                  {actualite.fichier_url ? (
                     <div className="h-40 overflow-hidden bg-gray-100">
                       <img
-                        src={act.image_url}
-                        alt={act.titre}
+                        src={actualite.fichier_url}
+                        title={actualite.fichier_url}
+                        alt={actualite.image_alt || actualite.titre}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
@@ -424,15 +592,17 @@ export default function HomeShowcase() {
                   <div className="p-5 flex flex-col flex-1">
                     <div className="flex items-center gap-2 text-sm text-gray-400 mb-3">
                       <Calendar className="w-4 h-4 text-orange-500" />
-                      <time>{formatDate(act.date_publication)}</time>
+                      <time dateTime={actualite.date_publication || undefined}>
+                        {actualite.date_publication ? formatDate(actualite.date_publication) : "Date non renseignée"}
+                      </time>
                     </div>
 
                     <h3 className="text-base font-bold text-gray-900 mb-2 leading-snug group-hover:text-orange-600 transition-colors line-clamp-2">
-                      {act.titre}
+                      {actualite.titre}
                     </h3>
 
                     <p className="text-sm text-gray-600 leading-relaxed flex-1 line-clamp-3">
-                      {act.description}
+                      {actualite.resume || actualite.contenu}
                     </p>
 
                     <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">
@@ -456,21 +626,23 @@ export default function HomeShowcase() {
             {(showAllServices ? services : services.slice(0, 3)).map((service) => (
               <div
                 key={service.slug}
-                onClick={() => navigate(`/services/${service.slug}`)}
+                onClick={() => navigate(`/service/${service.slug}`)}
                 className="group bg-white rounded-2xl p-7 border border-gray-100 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 cursor-pointer relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500" />
 
                 <div className="relative">
                   <div className="bg-orange-500 rounded-xl p-3 w-fit mb-5 group-hover:bg-orange-600 transition-colors duration-200">
-                    <service.icon className="w-7 h-7 text-white" />
+                    <Briefcase className="w-7 h-7 text-white" />
                   </div>
 
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {service.title}
+                    {service.libelle}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-5">
-                    {service.desc}
+                  <p className="text-gray-600 text-sm leading-relaxed mb-5 text-justify">
+                    {service.description?.length > 200
+                      ? `${service.description.slice(0, 200)}(...)`
+                      : service.description}
                   </p>
 
                   <span className="text-orange-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all duration-200">
@@ -482,14 +654,16 @@ export default function HomeShowcase() {
             ))}
           </div>
 
-          {!showAllServices && services.length > 3 && (
+          {services.length > 3 && (
             <div className="mt-8 flex justify-center">
               <button
-                onClick={() => setShowAllServices(true)}
+                type="button"
+                aria-expanded={showAllServices}
+                onClick={() => setShowAllServices((previous) => !previous)}
                 className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40"
               >
-                <ChevronDown className="w-5 h-5" />
-                Voir plus
+                <ChevronDown className={`w-5 h-5 transition-transform ${showAllServices ? 'rotate-180' : ''}`} />
+                {showAllServices ? 'Voir moins' : 'Voir plus'}
               </button>
             </div>
           )}
@@ -505,7 +679,7 @@ export default function HomeShowcase() {
             Découvrez en images les grands évènements marquants  notre Direction des Ressources Humaines
           </p>
 
-          {loadingPhotos ? (
+          {loadingPhototheques ? (
             <div className="flex gap-6 overflow-hidden">
               {[...Array(4)].map((_, i) => (
                 <div
@@ -520,7 +694,7 @@ export default function HomeShowcase() {
                 </div>
               ))}
             </div>
-          ) : photos.length === 0 ? (
+          ) : phototheques.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
               <Camera className="w-10 h-10 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">Aucune photo disponible pour le moment.</p>
@@ -531,18 +705,18 @@ export default function HomeShowcase() {
                 ref={photosRef}
                 className="flex gap-0 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 -mb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
-                {photos.map((photo) => (
+                {phototheques.map((photo) => (
                   <button
-                    key={photo.id}
+                    key={photo.uid}
                     onClick={() => {
-                      const idx = photos.findIndex((p) => p.id === photo.id);
+                      const idx = phototheques.findIndex((p) => p.uid === photo.uid);
                       setPhotoIndex(idx);
                       setSelectedPhoto(photo);
                     }}
                     className="group relative flex-shrink-0 w-[320px] snap-start overflow-hidden shadow-sm hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-300 aspect-[4/3] cursor-pointer"
                   >
                     <img
-                      src={photo.image_url}
+                      src={photo.fichier_url}
                       alt={photo.titre}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
@@ -604,9 +778,9 @@ export default function HomeShowcase() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                const prevIdx = (photoIndex - 1 + photos.length) % photos.length;
+                const prevIdx = (photoIndex - 1 + phototheques.length) % phototheques.length;
                 setPhotoIndex(prevIdx);
-                setSelectedPhoto(photos[prevIdx]);
+                setSelectedPhoto(phototheques[prevIdx]);
               }}
               aria-label="Photo précédente"
               className="absolute left-5 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-200"
@@ -617,9 +791,9 @@ export default function HomeShowcase() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                const nextIdx = (photoIndex + 1) % photos.length;
+                const nextIdx = (photoIndex + 1) % phototheques.length;
                 setPhotoIndex(nextIdx);
-                setSelectedPhoto(photos[nextIdx]);
+                setSelectedPhoto(phototheques[nextIdx]);
               }}
               aria-label="Photo suivante"
               className="absolute right-5 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-200"
@@ -632,7 +806,7 @@ export default function HomeShowcase() {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={selectedPhoto.image_url}
+                src={selectedPhoto.fichier_url}
                 alt={selectedPhoto.titre}
                 className="w-full max-h-[75vh] object-contain rounded-lg"
               />

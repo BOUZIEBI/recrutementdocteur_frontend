@@ -15,6 +15,7 @@ export type Communique = {
   contenu: string;
   image_url: string | null;
   fichier_key: string | null;
+  fichier_url: string | undefined;
   statut: string;
   est_epingle: boolean;
   date_publication: string | null;

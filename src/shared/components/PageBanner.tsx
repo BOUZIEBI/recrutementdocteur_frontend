@@ -1,13 +1,13 @@
 type PageBannerProps = {
-  title: string;
-  subtitle: string;
-  image: string;
+  title: string | undefined;
+  subtitle: string | undefined;
+  image: string | undefined;
 };
 
 export default function PageBanner({ title, subtitle, image }: PageBannerProps) {
   return (
     <div
-      className="relative py-24 overflow-hidden max-w-7xl mx-auto w-full"
+      className="relative py-24 overflow-hidden max-w-8xl mx-auto w-full"
       style={{
         backgroundImage: `url(${image})`,
         backgroundSize: 'cover',

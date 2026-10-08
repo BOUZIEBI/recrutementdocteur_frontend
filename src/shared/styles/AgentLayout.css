@@ -1,0 +1,8 @@
+.app-layout { min-height:100vh; background:#f3f4f6; color:#1f2937; }
+.app-layout .dashboard { margin-left:270px; padding:100px 32px 32px; }
+.app-layout .dashboard.sidebar-closed { margin-left:0; }
+.app-layout .content-section { background:white; padding:28px; border-radius:16px; margin-bottom:24px; }
+.app-layout h1 { font-size:1.75rem; font-weight:700; margin-bottom:16px; }
+.app-layout .dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; }
+.app-layout .sidebar-backdrop { position:fixed; inset:0; background:#0007; z-index:35; }
+@media(max-width:768px) { .app-layout .dashboard { margin-left:0; padding:90px 16px 24px; } }

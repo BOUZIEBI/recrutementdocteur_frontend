@@ -1,0 +1,12 @@
+.app-layout .sidebar { position:fixed; inset:0 auto 0 0; width:270px; background:#133458; color:white; z-index:45; overflow:auto; transition:transform .2s; }
+.app-layout .sidebar.closed { transform:translateX(-100%); }
+.app-layout .sidebar-header { padding:20px; background:white; }
+.app-layout .sidebar-logo { max-height:72px; margin:auto; }
+.app-layout .sidebar-nav { padding:16px 8px; }
+.app-layout .nav-link { display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; width:100%; text-align:left; }
+.app-layout .nav-link:hover,.app-layout .nav-link.active { background:#ffffff25; }
+.app-layout .nav-item-container { display:flex; align-items:center; }
+.app-layout .sub-nav { padding-left:18px; }
+.app-layout .sub-link { font-size:.875rem; }
+.app-layout .expand-btn { padding:12px; }
+.app-layout .nav-icon { width:20px; height:20px; }

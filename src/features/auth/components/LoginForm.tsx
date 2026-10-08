@@ -14,7 +14,9 @@ import {
 import { useAuth } from '../hooks/useAuth';
 
 export default function LoginForm() {
+
   const navigate = useNavigate();
+  
   const {
     mode, setMode,
     email, setEmail,
@@ -86,13 +88,16 @@ export default function LoginForm() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="auth-email" className="block text-sm font-semibold text-gray-700 mb-2">
                   Adresse email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="email"
+                    id="auth-email"
+                    name="email"
+                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -103,13 +108,16 @@ export default function LoginForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="auth-password" className="block text-sm font-semibold text-gray-700 mb-2">
                   Mot de passe
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    id="auth-password"
+                    name="password"
+                    autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                     required
                     minLength={6}
                     value={password}

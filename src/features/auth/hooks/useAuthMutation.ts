@@ -1,32 +1,37 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { submitAuth, translateAuthError } from '../api/auth.api';
-import { useAuthStore } from '@/shared/lib/authStore';
-import { supabase } from '@/shared/lib/supabase';
 import type { AuthMode } from '../types/auth.types';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useNavigate } from 'react-router-dom';
 
 export function useAuthMutation() {
   const navigate = useNavigate();
-  const setSession = useAuthStore((s) => s.setSession);
 
   return useMutation({
     mutationFn: async ({ mode, email, password }: { mode: AuthMode; email: string; password: string }) => {
-      await submitAuth(mode, email, password);
+      try {
+        await submitAuth(mode, email, password);
+        if (mode === 'signin') {
+          await useAuthStore.getState().loadAuth(true);
+          const { auth, error } = useAuthStore.getState();
+          if (!auth?.success || auth.data?.is_active !== true) {
+            throw new Error(error || 'Votre compte n’est pas actif.');
+          }
+        }
+        return { mode };
+      } catch (error) {
+        throw new Error(translateAuthError(error instanceof Error ? error.message : 'Une erreur est survenue.'));
+      }
+    },
+    onSuccess: ({ mode }) => {
       if (mode === 'signin') {
-        const { data } = await supabase.auth.getSession();
-        return { mode, session: data.session };
+        navigate(
+            "/fiche-identification/informations-generales",
+            {
+              replace: true,
+            },
+          );
       }
-      return { mode, session: null };
-    },
-    onSuccess: ({ mode, session }) => {
-      if (mode === 'signin' && session) {
-        setSession(session);
-        navigate('/');
-      }
-    },
-    onError: (err) => {
-      const msg = err instanceof Error ? err.message : 'Une erreur est survenue.';
-      throw new Error(translateAuthError(msg));
     },
   });
 }

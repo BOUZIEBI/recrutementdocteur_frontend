@@ -64,7 +64,7 @@ export default function ChatAssistant() {
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
-      <div className="relative max-w-7xl mx-auto w-full h-full">
+      <div className="relative max-w-8xl mx-auto w-full h-full">
         <button
           onClick={() => setOpen(!open)}
           aria-label={open ? 'Fermer l assistant' : 'Ouvrir l assistant'}

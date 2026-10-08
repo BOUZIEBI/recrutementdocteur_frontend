@@ -45,7 +45,7 @@ export default function Header() {
   };
 
   return (
-    <header className="relative z-50 w-full max-w-7xl mx-auto">
+    <header className="relative z-50 w-full max-w-8xl mx-auto">
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-24">
           <button onClick={handleLogoClick} className="flex items-center">
@@ -72,10 +72,10 @@ export default function Header() {
                   <NavLink
                     to={link.to}
                     className={({ isActive }) =>
-                      `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 inline-flex items-center gap-2 ${
+                      `px-4 py-2 rounded-lg text-md font-bold transition-all duration-200 inline-flex items-center gap-2 ${
                         isActive
                           ? 'bg-white text-orange-600 shadow-sm'
-                          : 'text-white/90 hover:bg-white/15'
+                          : 'text-white hover:bg-white/15'
                       }`
                     }
                   >
@@ -90,7 +90,7 @@ export default function Header() {
                         <NavLink
                           key={sub.to}
                           to={sub.to}
-                          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-150"
+                          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-md font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-150"
                         >
                           <sub.icon className="w-4 h-4 text-orange-500" />
                           {sub.label}
@@ -105,7 +105,7 @@ export default function Header() {
                   to={link.to}
                   end={link.to === '/'}
                   className={({ isActive }) =>
-                    `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 inline-flex items-center gap-2 ${
+                    `px-4 py-2 rounded-lg text-md font-bold transition-all duration-200 inline-flex items-center gap-2 ${
                       isActive
                         ? 'bg-white text-orange-600 shadow-sm'
                         : 'text-white/90 hover:bg-white/15'

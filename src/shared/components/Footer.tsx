@@ -3,7 +3,7 @@ import { Linkedin, Twitter, Facebook } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 py-12 max-w-7xl mx-auto w-full">
+    <footer className="bg-gray-900 text-gray-400 py-12 max-w-8xl mx-auto w-full">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8 mb-10">
           <div>
@@ -15,8 +15,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-sm leading-relaxed">
-              Votre partenaire de confiance pour la gestion et le développement
-              de votre capital humain depuis plus de 15 ans.
+              Votre Direction des Ressources Humaines pour la gestion de vos demarches administratives.
             </p>
           </div>
 
@@ -45,8 +44,8 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className="text-sm mt-4">contact@rhpro.fr</p>
-            <p className="text-sm mt-1">+33 1 23 45 67 89</p>
+            <p className="text-sm mt-4">drhmesrs.recrutement@gmail.com</p>
+            <p className="text-sm mt-1">(+225) 0140263744</p>
           </div>
         </div>
 

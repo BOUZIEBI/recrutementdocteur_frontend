@@ -36,7 +36,7 @@ export default function PresentationDetailPage() {
       />
 
       <section className="py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 gap-6 mb-10">
             <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-lg">
               <MapPin className="w-9 h-9 text-orange-500 mb-4" />

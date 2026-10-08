@@ -1,3 +1,5 @@
-export { fetchPhotos } from './api/phototheque.api';
-export { usePhotos } from './hooks/usePhotos';
-export type { Photothèque } from './types/phototheque.types';
+
+
+export { fetchPhotothequeByUid, fetchPhototheques } from './api/phototheque.api';
+export { usePhototheques, usePhotothequeById } from './hooks/usePhototheques';
+export type { Phototheque } from './types/phototheque.types';

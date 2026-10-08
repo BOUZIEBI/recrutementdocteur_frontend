@@ -1,0 +1,10 @@
+.app-layout .header { position:fixed; top:0; right:0; left:270px; z-index:30; background:white; border-bottom:1px solid #ddd; }
+.app-layout .header.sidebar-closed { left:0; }
+.app-layout .header-content,.app-layout .header-actions { display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.app-layout .header-content { height:72px; padding:16px 24px; }
+.app-layout .icon,.app-layout .user-avatar { width:24px; height:24px; }
+.app-layout .header-user { position:relative; }
+.app-layout .user-menu-toggle { display:flex; align-items:center; gap:8px; }
+.app-layout .user-dropdown { position:absolute; right:0; top:40px; width:240px; padding:12px; background:white; box-shadow:0 6px 20px #0002; border-radius:10px; }
+.app-layout .user-dropdown-link { display:flex; gap:8px; padding:10px; }
+@media(max-width:768px) { .app-layout .header { left:0; } }

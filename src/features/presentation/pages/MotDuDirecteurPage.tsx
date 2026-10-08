@@ -18,7 +18,7 @@ export default function MotDuDirecteurPage() {
       />
 
       <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4">
           <div className="grid md:grid-cols-3 gap-10 items-start">
             <div className="md:col-span-1 flex flex-col">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-gray-900/20 h-[420px]">
