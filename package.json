@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "build": "tsc -b && vite build",
-    "start": "serve -s dist -l $PORT"
+    "start": "serve -s dist -l ${PORT:-3000}"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
