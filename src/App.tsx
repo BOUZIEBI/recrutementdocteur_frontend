@@ -47,10 +47,10 @@ export default function App() {
 function PublicApp() {
   const { pathname } = useLocation();
   const isLoginPage = /^\/(login|connexion)\/?$/.test(pathname);
-  const initialized = useCryptoStore((state) => state.initialized);
-  const loading = useCryptoStore((state) => state.loading);
-  const error = useCryptoStore((state) => state.error);
-  const initialize = useCryptoStore((state) => state.initialize);
+  //const initialized = useCryptoStore((state) => state.initialized);
+  //const loading = useCryptoStore((state) => state.loading);
+  //const error = useCryptoStore((state) => state.error);
+  //const initialize = useCryptoStore((state) => state.initialize);
 
   useEffect(() => {
     pageRefreshService.start();
@@ -60,22 +60,22 @@ function PublicApp() {
   const auth = useAuthStore((state) => state.auth);
   const loadAuth = useAuthStore((state) => state.loadAuth);
 
+  
   useEffect(() => {
-    if (!initialized || isLoginPage || auth) return;
+    if ( isLoginPage || auth) return;
     void loadAuth();
-  }, [initialized, isLoginPage, auth, loadAuth]);
+  }, [ isLoginPage, auth, loadAuth]);
 
+  /*
   useEffect(() => {
     if (isLoginPage) return;
     void initialize().catch(() => {
       // Le store expose l'erreur pour l'afficher ci-dessous.
     });
   }, [initialize, isLoginPage]);
+  */
 
-  if (!isLoginPage && error) {
-    return <p role="alert">Erreur : {error}</p>;
-  }
-  if (!isLoginPage && (loading || !initialized)) {
+  if (!isLoginPage ) {
     return <p role="status"></p>;
   }
 

@@ -111,17 +111,17 @@
 }
 
 a.nav-link:hover {
-  color: #FC6C0C;
+  color: var(--color-accent);
 }
 
 a.nav-link.active {
-  color: #FC6C0C;
+  color: var(--color-accent);
 }
 
 
 .nav-item-container:has(> .nav-link.active) {
   background-color: #e8f4f8;
-  border-left-color: #3498db;
+  border-left-color: var(--color-info);
   font-weight: 900;
   color: #161616;
 }
@@ -183,7 +183,7 @@ a.nav-link.active {
 
 
 .nav-link.sub-link.active {
-  color: #FC6C0C;
+  color: var(--color-accent);
   font-weight: 500;
 }
 
@@ -201,7 +201,7 @@ a.nav-link.active {
 }
 
 .expand-btn:hover {
-  color: #3498db;
+  color: var(--color-info);
 }
 
 .nav-item-container:has(> .nav-link.active) > .expand-btn {
@@ -291,19 +291,19 @@ a.nav-link.active {
 .submenu-popup-link:hover {
   text-decoration: none;
   background-color: #f5f7fa;
-  border-left-color: #3498db;
-  color: #FC6C0C;
+  border-left-color: var(--color-info);
+  color: var(--color-accent);
 }
 
 .submenu-popup-link.active {
   background-color: #e8f4f8;
-  color: #FC6C0C;
-  border-left-color: #3498db;
+  color: var(--color-accent);
+  border-left-color: var(--color-info);
   font-weight: 600;
 }
 
 .submenu-popup-link.active:hover {
-  color: #FC6C0C;
+  color: var(--color-accent);
 }
 
 /* Scrollbar styling */

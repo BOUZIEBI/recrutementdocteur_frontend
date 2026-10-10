@@ -29,7 +29,7 @@ interface AjoutagentPageProps {
   statuts?: Option[];
 }
 
-const fieldClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[#FC6C0C] focus:outline-none focus:ring-0 ';
+const fieldClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[var(--color-accent)] focus:outline-none focus:ring-0 ';
 const labelClass = 'mb-2 block text-sm font-medium text-gray-700';
 const defaultGenres: Option[] = [
   { value: 'masculin', label: 'Masculin' },
@@ -120,7 +120,7 @@ function SearchableSelect({ name, label, options, onValueChange, loading = false
             autoFocus type="text" role="combobox" aria-label={`Rechercher : ${label}`}
             aria-expanded={true} aria-autocomplete="list" aria-controls={`${id}-options`}
             aria-activedescendant={filtered[activeIndex] ? `${id}-option-${activeIndex}` : undefined}
-            value={search} placeholder="Rechercher…" className={`${fieldClass.replace('focus:border-[#FC6C0C]', 'focus:border-[#C8C6C6]')} mb-2`}
+            value={search} placeholder="Rechercher…" className={`${fieldClass.replace('focus:border-[var(--color-accent)]', 'focus:border-[#C8C6C6]')} mb-2`}
             onChange={(event) => { setSearch(event.target.value); setActiveIndex(-1); }}
             onKeyDown={(event) => {
               if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {

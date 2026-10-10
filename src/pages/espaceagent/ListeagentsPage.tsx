@@ -124,16 +124,16 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
                 value={search}
                 onChange={(event) => { setSearch(event.target.value); setCurrentPage(1); }}
                 placeholder="Rechercher un agent…"
-                className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[#FC6C0C] focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[var(--color-accent)] focus:outline-none"
               />
             </label>
           </div>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
-              <button type="button" aria-pressed={registrationFilter === 'preinscrits'} onClick={() => { setRegistrationFilter(registrationFilter === 'preinscrits' ? 'all' : 'preinscrits'); setCurrentPage(1); }} className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium ${registrationFilter === 'preinscrits' ? 'border-[#FC6C0C] bg-[#FC6C0C] text-white' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}`}>
+              <button type="button" aria-pressed={registrationFilter === 'preinscrits'} onClick={() => { setRegistrationFilter(registrationFilter === 'preinscrits' ? 'all' : 'preinscrits'); setCurrentPage(1); }} className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium ${registrationFilter === 'preinscrits' ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}`}>
                 <Users className="h-4 w-4" aria-hidden="true" /> Préinscrits
               </button>
-              <button type="button" aria-pressed={registrationFilter === 'non-preinscrits'} onClick={() => { setRegistrationFilter(registrationFilter === 'non-preinscrits' ? 'all' : 'non-preinscrits'); setCurrentPage(1); }} className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium ${registrationFilter === 'non-preinscrits' ? 'border-[#FC6C0C] bg-[#FC6C0C] text-white' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}`}>
+              <button type="button" aria-pressed={registrationFilter === 'non-preinscrits'} onClick={() => { setRegistrationFilter(registrationFilter === 'non-preinscrits' ? 'all' : 'non-preinscrits'); setCurrentPage(1); }} className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium ${registrationFilter === 'non-preinscrits' ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}`}>
                 <Users className="h-4 w-4" aria-hidden="true" /> Non-préinscrits
               </button>
             </div>
@@ -154,7 +154,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
                 <tr>
                   {columns.map((column) => (
                     <th key={column.key} scope="col" aria-sort={sortKey === column.key ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'} className="whitespace-nowrap px-4 py-3">
-                      <button type="button" onClick={() => sortBy(column.key)} className="inline-flex items-center gap-2 font-semibold hover:text-[#FC6C0C]">
+                      <button type="button" onClick={() => sortBy(column.key)} className="inline-flex items-center gap-2 font-semibold hover:text-[var(--color-accent)]">
                         {column.label}
                         {sortKey === column.key
                           ? sortDirection === 'asc' ? <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" /> : <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
@@ -166,7 +166,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
                 {loadingAgents ? (
-                  <tr><td colSpan={columns.length} className="px-4 py-10 text-center text-gray-500"><span role="status" className="inline-flex items-center gap-3"><Loader2 className="h-6 w-6 animate-spin text-[#FC6C0C]" aria-hidden="true" /> Chargement des agents…</span></td></tr>
+                  <tr><td colSpan={columns.length} className="px-4 py-10 text-center text-gray-500"><span role="status" className="inline-flex items-center gap-3"><Loader2 className="h-6 w-6 animate-spin text-[var(--color-accent)]" aria-hidden="true" /> Chargement des agents…</span></td></tr>
                 ) : visibleAgents.length > 0 ? paginatedAgents.map((agent) => (
                   <tr key={agent.uid} className="hover:bg-gray-50">
                     {columns.map((column) => (
@@ -179,7 +179,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
                               aria-haspopup="menu"
                               aria-expanded={openActionsAgentId === agent.uid}
                               onClick={() => setOpenActionsAgentId((openId) => openId === agent.uid ? null : agent.uid)}
-                              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-[#FC6C0C] focus:outline-none focus:ring-2 focus:ring-[#FC6C0C]"
+                              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                             >
                               <FaEllipsisV aria-hidden="true" />
                             </button>
@@ -201,7 +201,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
                                     target="_blank"
                                     rel="noreferrer"
                                     onClick={() => setOpenActionsAgentId(null)}
-                                    className="block whitespace-normal px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-[#FC6C0C]"
+                                    className="block whitespace-normal px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-[var(--color-accent)]"
                                   >
                                     {label}
                                   </a>
@@ -226,7 +226,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
                 id="agents-page-size"
                 value={itemsPerPage}
                 onChange={(event) => { setItemsPerPage(Number(event.target.value)); setCurrentPage(1); }}
-                className="rounded-md border border-gray-300 bg-white px-2 py-1.5 focus:border-[#FC6C0C] focus:outline-none"
+                className="rounded-md border border-gray-300 bg-white px-2 py-1.5 focus:border-[var(--color-accent)] focus:outline-none"
               >
                 {[10, 25, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
               </select>

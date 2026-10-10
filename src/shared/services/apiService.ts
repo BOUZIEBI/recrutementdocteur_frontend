@@ -1,13 +1,7 @@
 import axios from "axios";
 
 const configuredApiUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, "");
-const apiBaseUrl = import.meta.env.DEV
-  ? "/api/v1"
-  : configuredApiUrl
-    ? configuredApiUrl.endsWith("/api/v1")
-      ? configuredApiUrl
-      : `${configuredApiUrl}/api/v1`
-    : "/api/v1";
+const apiBaseUrl = import.meta.env.VITE_API_URL 
 
 export const api = axios.create({
   // En développement, passer par le proxy Vite pour éviter les appels cross-origin.

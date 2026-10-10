@@ -30,6 +30,7 @@ function isEncryptedPayload(value: unknown): value is EncryptedPayload {
 
 
 export async function signIn(email: string, password: string): Promise<AuthenticationResponse> {
+
   await useCryptoStore.getState().initialize();
   const { privateKey, sessionUid } = useCryptoSessionStore.getState();
   if (!privateKey || !sessionUid) throw new Error('La session cryptographique est absente.');
@@ -97,26 +98,30 @@ export async function deconnexion(): Promise<LogoutResponse> {
 
 
 async function requestCurrentUser(
-  privateKey: CryptoKey,
-  sessionUid: string,
-  accessToken?: string | null,
+  //privateKey: CryptoKey,
+  //sessionUid: string, 
+  //accessToken?: string | null,
 ): Promise<GetMeResponse<User>> {
-  const headers: Record<string, string> = {
-    "X-Crypto-Session-ID": sessionUid,
-  };
 
-  const csrfToken = await getCsrfToken();
 
-  if (csrfToken) {
-    headers["X-CSRF-Token"] = csrfToken;
-  }
+  //const headers: Record<string, string> = {
+  //  "X-Crypto-Session-ID": sessionUid,
+  //};
 
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
-  }
+  const headers: Record<string, string> = {}
+
+  //const csrfToken = await getCsrfToken();
+
+  //if (csrfToken) {
+  //  headers["X-CSRF-Token"] = csrfToken;
+  //}
+
+  //if (accessToken) {
+  //  headers.Authorization = `Bearer ${accessToken}`;
+  //}
 
   const response = await api.get<unknown>(
-    "/auth/me",
+    "/api/articles/", 
     {
       withCredentials: true,
       headers,
@@ -129,6 +134,7 @@ async function requestCurrentUser(
     );
   }
 
+  /*
   const decrypted =
     await decryptServerResponse<
       GetMeResponse<User>
@@ -141,11 +147,13 @@ async function requestCurrentUser(
     code,
     success,
   } = decrypted;
+   */
 
   /*
    * L’access token est expiré, mais le refresh token
    * est encore valide : renouveler puis refaire /auth/me.
    */
+  /*
   if (code==401 && success==false) {
     const response_data =await refreshAccessToken();
 
@@ -158,8 +166,11 @@ async function requestCurrentUser(
     );
 
   }
+    */ 
 
-  return decrypted;
+  //return decrypted;
+
+  return undefined as any; // Placeholder to satisfy TypeScript, replace with actual implementation
 
   
 }
@@ -184,9 +195,9 @@ export async function getMe(): Promise<
   const accessToken = await decryptToken(access_storage_key);
 
   let decrypted = await requestCurrentUser(
-    privateKey,
-    sessionUid,
-    accessToken
+    //privateKey,
+    //sessionUid,
+    //accessToken
   );
 
   if (decrypted.success !== true) {

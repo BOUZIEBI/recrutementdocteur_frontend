@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-danger: #c0392b;
+  --color-accent: #FC6C0C;
+  --color-info: #3498db;
+  --color-overlay: #0007;
+}
+
 @keyframes bgZoom {
   0% { transform: scale(1); }
   100% { transform: scale(1.15); }

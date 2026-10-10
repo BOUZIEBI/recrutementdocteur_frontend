@@ -29,7 +29,7 @@
   padding: 2px;
 }
 
-.search-modal::backdrop { background: #0007; }
+.search-modal::backdrop { background: var(--color-overlay); }
 .search-modal-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .search-modal-heading h2 { margin: 0; color: #2c3e50; font-size: 24px; }
 .search-close { width: 44px; height: 44px; border: 0; border-radius: 6px; background: #f5f7fa; font-size: 28px; cursor: pointer; }
@@ -41,10 +41,10 @@
 .search-status { margin: 16px 0 8px; font-size: 14px; color: #666; }
 .search-results { list-style: none; padding: 0; margin: 0; }
 .search-results a { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 6px; color: #2c3e50; overflow-wrap: anywhere; }
-.search-results a:hover { background: #f5f7fa; color: #FC6C0C; text-decoration: none; }
+.search-results a:hover { background: #f5f7fa; color: var(--color-accent); text-decoration: none; }
 .search-results small { color: #666; }
 .search-empty { padding: 16px 0; }
-.search-modal :focus-visible { outline: 2px solid #3498db; outline-offset: 2px; }
+.search-modal :focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
 @media (max-width: 480px) {
   .search-modal { padding: 16px; }
   .search-input-row { flex-direction: column; }

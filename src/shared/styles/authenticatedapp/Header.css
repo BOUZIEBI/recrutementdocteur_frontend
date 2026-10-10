@@ -40,7 +40,7 @@
 
 .toggle-sidebar-btn:hover {
   background-color: #f5f7fa;
-  color: #3498db;
+  color: var(--color-info);
 }
 
 .toggle-sidebar-btn .icon {
@@ -69,7 +69,7 @@
 
 .header-btn:hover {
   background-color: #f5f7fa;
-  color: #3498db;
+  color: var(--color-info);
 }
 
 .header-btn .icon {
@@ -97,7 +97,7 @@
 
 .user-menu-toggle:focus-visible,
 .user-dropdown-link:focus-visible {
-  outline: 2px solid #3498db;
+  outline: 2px solid var(--color-info);
   outline-offset: 3px;
 }
 
@@ -142,7 +142,7 @@
 .user-dropdown-logout {
   margin-top: 4px;
   border-top: 1px solid #e0e0e0;
-  color: #c0392b;
+  color: var(--color-danger);
 }
 
 .user-dropdown-logout:hover {
@@ -154,7 +154,7 @@
   height: 40px;
   padding: 8px;
   flex-shrink: 0;
-  color: #3498db;
+  color: var(--color-info);
   background-color: #e8f4f8;
   border-radius: 50%;
   cursor: pointer;
