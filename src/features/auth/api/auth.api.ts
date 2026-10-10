@@ -4,7 +4,7 @@ import type { User } from '../types/user.types';
 import { api } from '@/shared/services/apiService';
 import { supabase } from '@/shared/lib/supabase';
 import { useCryptoSessionStore } from '@/store/useCryptoSessionStore';
-import { useCryptoStore } from '@/store/useCryptoStore';
+//import { useCryptoStore } from '@/store/useCryptoStore';
 import { fetchPublicKey, fetchCsrfToken } from '@/shared/services/cryptoService';
 import { encryptPayload, decryptServerResponse, type EncryptedPayload } from '@/shared/services/hybridCrypto';
 import { encryptToken, decryptToken, clearToken } from '@/shared/services/EncrypdecrypToten';
@@ -31,7 +31,7 @@ function isEncryptedPayload(value: unknown): value is EncryptedPayload {
 
 export async function signIn(email: string, password: string): Promise<AuthenticationResponse> {
 
-  await useCryptoStore.getState().initialize();
+  //await useCryptoStore.getState().initialize();
   const { privateKey, sessionUid } = useCryptoSessionStore.getState();
   if (!privateKey || !sessionUid) throw new Error('La session cryptographique est absente.');
 
@@ -65,7 +65,7 @@ export async function signIn(email: string, password: string): Promise<Authentic
 
 export async function deconnexion(): Promise<LogoutResponse> {
   
-  await useCryptoStore.getState().initialize();
+  //await useCryptoStore.getState().initialize();
   const access_storage_key="access_token"
   const accessToken = await decryptToken(access_storage_key);
   const { privateKey, sessionUid } = useCryptoSessionStore.getState();
@@ -178,8 +178,8 @@ async function requestCurrentUser(
 export async function getMe(): Promise<
   GetMeResponse<User>
 > {
-  await useCryptoStore.getState().initialize();
-
+  //await useCryptoStore.getState().initialize();
+ /*
   const {
     privateKey,
     sessionUid,
@@ -190,16 +190,16 @@ export async function getMe(): Promise<
       "La session cryptographique est absente.",
     );
   }
-
+  */
   const access_storage_key="access_token"
-  const accessToken = await decryptToken(access_storage_key);
+  //const accessToken = await decryptToken(access_storage_key);
 
   let decrypted = await requestCurrentUser(
     //privateKey,
     //sessionUid,
     //accessToken
   );
-
+  /*
   if (decrypted.success !== true) {
     throw new Error(decrypted.message || 'La session d’authentification a expiré.');
   }
@@ -207,7 +207,7 @@ export async function getMe(): Promise<
     || typeof decrypted.data.is_active !== 'boolean') {
     throw new Error('La réponse utilisateur est invalide.');
   }
-
+  */
   return decrypted;
 }
 
