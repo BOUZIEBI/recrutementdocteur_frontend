@@ -21,8 +21,8 @@ import AjoutagentPage from './espaceagent/AjoutagentPage'
 function AuthenticatedApp() {
   const location = useLocation()
   const isLoginPage = ['/connexion', '/login'].includes(location.pathname.replace(/\/$/, ''))
-  const initialized = useCryptoStore((state) => state.initialized)
-  const initialize = useCryptoStore((state) => state.initialize)
+  //const initialized = useCryptoStore((state) => state.initialized)
+  //const initialize = useCryptoStore((state) => state.initialize)
   const cryptoError = useCryptoStore((state) => state.error)
   const auth = useAuthStore((state) => state.auth)
   const loadAuth = useAuthStore((state) => state.loadAuth)
@@ -34,15 +34,7 @@ function AuthenticatedApp() {
     return () => pageRefreshService.stop()
   }, [])
 
-  useEffect(() => {
-    if (isLoginPage || initialized) return
-    void initialize().catch(() => { /* L’erreur est affichée depuis le store. */ })
-  }, [initialized, isLoginPage, initialize])
 
-  useEffect(() => {
-    if (!initialized || isLoginPage || auth || loaded) return
-    void loadAuth()
-  }, [initialized, isLoginPage, auth, loaded, loadAuth])
 
   useEffect(() => {
     if (import.meta.env.DEV) 
@@ -51,21 +43,17 @@ function AuthenticatedApp() {
 
   if (isLoginPage) return <LoginPage />
 
-  if (!initialized && cryptoError) {
-    return <main role="alert">
-      <p>{cryptoError}</p>
-      <button type="button" onClick={() => { void initialize().catch(() => {}) }}>Réessayer</button>
-    </main>
-  }
 
-  if (!initialized || loading || (!auth && !loaded)) {
+  if ( loading || (!auth && !loaded)) {
     return <main role="status">Vérification de votre session…</main>
   }
   
+  /*
   if (!auth?.success || auth.data?.is_active !== true) {
     return <Navigate to="/connexion" replace state={{ from: location.pathname + location.search + location.hash }} />
   }
-
+  */
+ 
   return <AppLayout />
 }
 
@@ -135,11 +123,11 @@ function AppLayout() {
                 }
               >
                 <Route
-                  path="/fiche-identification/informations-generales"
+                  path="/fiche-identification/informations-generales_2"
                   element={<AgentPage title="Informations Générales" breadcrumb="Fiche d'Identification / Informations générales" />}
                 />
               </Route>
-              
+              <Route path="/fiche-identification/informations-generales" element={<AgentPage title="Informations Générales" breadcrumb="Fiche d'Identification / Informations générales" />} />
               <Route path="/fiche-identification/enfants" element={<AgentPage title="Liste des Enfants" />} />
               <Route path="/fiche-identification/services" element={<AgentPage title="Services" />} />
               <Route path="/fiche-identification/autres-services" element={<AgentPage title="Autres services" />} />

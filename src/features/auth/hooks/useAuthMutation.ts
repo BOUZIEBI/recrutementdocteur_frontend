@@ -14,7 +14,7 @@ export function useAuthMutation() {
         if (mode === 'signin') {
           await useAuthStore.getState().loadAuth(true);
           const { auth, error } = useAuthStore.getState();
-          if (!auth?.success || auth.data?.is_active !== true) {
+          if (auth?.success == true) {
             throw new Error(error || 'Votre compte n’est pas actif.');
           }
         }

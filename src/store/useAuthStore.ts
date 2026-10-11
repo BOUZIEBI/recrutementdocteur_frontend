@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const access_token=decryptToken("access_token")
         let authentication=null
         if (access_token!=null) {
-            authentication = await getMe();
+            //authentication = await getMe();
         }
         
       

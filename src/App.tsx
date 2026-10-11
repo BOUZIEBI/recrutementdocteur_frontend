@@ -74,11 +74,12 @@ function PublicApp() {
     });
   }, [initialize, isLoginPage]);
   */
-
+  /*
   if (!isLoginPage ) {
     return <p role="status"></p>;
   }
-
+  */
+ 
   return (
     <div className="min-h-screen bg-gray-200 font-sans antialiased">
       <ScrollToTop />

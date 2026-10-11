@@ -32,34 +32,25 @@ function isEncryptedPayload(value: unknown): value is EncryptedPayload {
 export async function signIn(email: string, password: string): Promise<AuthenticationResponse> {
 
   //await useCryptoStore.getState().initialize();
-  const { privateKey, sessionUid } = useCryptoSessionStore.getState();
-  if (!privateKey || !sessionUid) throw new Error('La session cryptographique est absente.');
+  //const { privateKey, sessionUid } = useCryptoSessionStore.getState();
+  //if (!privateKey || !sessionUid) throw new Error('La session cryptographique est absente.');
 
-  const headers: Record<string, string> = { 'X-Crypto-Session-ID': sessionUid };
-  const csrfToken = await getCsrfToken();
-  headers['X-CSRF-Token'] = csrfToken;
+  const headers: Record<string, string> = { };
+  //const csrfToken = await getCsrfToken();
+  //headers['X-CSRF-Token'] = csrfToken;
   
-  const { payload } = await encryptPayload({ username: email, password }, fetchPublicKey());
-  const response = await api.post<unknown>('/auth/login', payload, { headers });
+  //const { payload } = await encryptPayload({ username: email, password }, fetchPublicKey());
+  const response = await api.post<unknown>('/auth/login/', { username: email, password }, { headers });
 
-  if (!isEncryptedPayload(response.data)) 
-    throw new Error('La réponse chiffrée est invalide.');
+  //if (!isEncryptedPayload(response.data)) 
+  //  throw new Error('La réponse chiffrée est invalide.');
 
-  const decrypted = await decryptServerResponse<AuthenticationResponse>(response.data, privateKey);
-  
-  if (!decrypted || typeof decrypted !== 'object') {
-    throw new Error('La réponse d’authentification est invalide.');
-  }
-
-  if (decrypted.success === false) {
-    throw new Error(typeof decrypted.message === 'string' ? decrypted.message : 'Échec de la connexion.');
-  }
-
+  console.log(response)
   const access_storage_key="access_token"
   const refresh_storage_key="refresh_token"
-  await encryptToken(decrypted.data.access_token, access_storage_key);
-  await encryptToken(decrypted.data.refresh_token, refresh_storage_key);
-  return decrypted;
+  //await encryptToken(response.data.access_token, access_storage_key);
+  //await encryptToken(response.data.refresh_token, refresh_storage_key);
+  return response.data as AuthenticationResponse;
 }
 
 
@@ -121,7 +112,7 @@ async function requestCurrentUser(
   //}
 
   const response = await api.get<unknown>(
-    "/api/articles/", 
+    "/auth/me/", 
     {
       withCredentials: true,
       headers,
