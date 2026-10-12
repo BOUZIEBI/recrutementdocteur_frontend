@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 
 import { useAuthStore } from "@/store/useAuthStore";
+import type { PermissionResponse } from "@/features/auth/types/user.types";
 
 
 interface ProtectedRouteProps {
@@ -30,52 +31,39 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const location = useLocation();
 
-  const auth = useAuthStore(
-    (state) => state.auth,
-  );
-
-  const loading = useAuthStore(
-    (state) => state.loading,
-  );
-
-  const loaded = useAuthStore(
-    (state) => state.loaded,
-  );
-
-  const error = useAuthStore(
-    (state) => state.error,
-  );
-
-  const loadAuth = useAuthStore(
-    (state) => state.loadAuth,
-  );
+  const auth = useAuthStore((state) => state.auth);
+  const loading = useAuthStore((state) => state.loading);
+  const loaded = useAuthStore((state) => state.loaded);
+  const error = useAuthStore((state) => state.error);
+  const loadAuth = useAuthStore((state) => state.loadAuth);
 
   useEffect(() => {
-    if (!loaded && !loading) {
+    if (!loaded && !loading && !error) {
       void loadAuth();
     }
-  }, [
-    loaded,
-    loading,
-    loadAuth,
-  ]);
+  }, [loaded, loading, error, loadAuth]);
 
+  // Attendre la fin de la vérification d'authentification
   if (loading || (!loaded && !error)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p></p>
+        <p>Vérification de l'authentification...</p>
       </div>
     );
   }
 
-  const authenticationData = auth?.data;
+  const user = auth?.data;
 
-  const isAuthenticated = auth?.success === true && auth?.code === 200 && auth?.data.is_active === true;
+  const isAuthenticated =
+    auth?.success === true &&
+    auth?.code === 200 &&
+    user?.is_active === true;
 
+  // Utilisateur non connecté
   if (!isAuthenticated) {
     return (
       <Navigate
-        to="/connexion"
+        to="/login"
         replace
         state={{
           from: location.pathname,
@@ -83,49 +71,44 @@ export default function ProtectedRoute({
       />
     );
   }
-
-  /*
-   * Un super-administrateur peut accéder
-   * à toutes les routes.
-   */
-  if (auth?.data?.is_superuser) {
+  
+  // Super-administrateur
+  if (user?.is_superuser === true) {
     return <Outlet />;
   }
 
-    const userRoleCode = auth?.data?.role?.code;
+  // Code du rôle
+  const userRoleCode = user?.role?.code ?? null;
 
-    const userPermissionCodes = auth?.data?.permissions.map(
-        (permission) => permission.code,
-    );
+  // Permissions de l'utilisateur
+  const userPermissionCodes: string[] =
+    user?.permissions?.map(
+      (permission: PermissionResponse) => permission.codename
+    ) ?? [];
 
-    const hasRequiredRole = roles.length === 0 ||
+  // Vérification du rôle
+  const hasRequiredRole =
+    roles.length === 0 ||
     (
       typeof userRoleCode === "string" &&
       roles.includes(userRoleCode)
     );
 
+  // Vérification des permissions
   const hasRequiredPermissions =
     permissions.length === 0 ||
     (
       requireAllPermissions
-        ? permissions.every(
-            (permissionCode) =>
-              userPermissionCodes.includes(
-                permissionCode,
-              ),
+        ? permissions.every((permissionCode) =>
+            userPermissionCodes.includes(permissionCode)
           )
-        : permissions.some(
-            (permissionCode) =>
-              userPermissionCodes.includes(
-                permissionCode,
-              ),
+        : permissions.some((permissionCode) =>
+            userPermissionCodes.includes(permissionCode)
           )
     );
 
-  if (
-    !hasRequiredRole ||
-    !hasRequiredPermissions
-  ) {
+  // Accès interdit
+  if (!hasRequiredRole || !hasRequiredPermissions) {
     return (
       <Navigate
         to="/non-autorise"

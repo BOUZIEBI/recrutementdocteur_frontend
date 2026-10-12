@@ -1,14 +1,13 @@
 import { create } from "zustand";
 import axios from "axios";
 import { getMe } from "@/features/auth/api/auth.api";
-import { User } from "@/features/auth/types/user.types";
 import type { GetMeResponse } from "@/features/auth/types/user.types";
 import { decryptToken } from "@/shared/services/EncrypdecrypToten";
 
 
 
 interface AuthState {
-  auth: GetMeResponse<User> | null;
+  auth: GetMeResponse | null;
   loading: boolean;
   loaded: boolean;
   error: string | null;
@@ -46,16 +45,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const access_token=decryptToken("access_token")
         let authentication=null
         if (access_token!=null) {
-            //authentication = await getMe();
+            authentication = await getMe();
         }
         
-      
         set({
             auth: authentication,
             loading: false,
             loaded: true,
             error: null,
         });
+        
     } catch (error: unknown) {
 
       let message ="Impossible de récupérer les informations de l’utilisateur.";

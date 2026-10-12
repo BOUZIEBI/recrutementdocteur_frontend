@@ -1,6 +1,6 @@
-import type { AuthMode, AuthenticationResponse, LogoutResponse } from '../types/auth.types';
+import type { AuthMode, AuthenticationResponse, AuthenticationData, LogoutResponse } from '../types/auth.types';
 import type { GetMeResponse } from '../types/user.types';
-import type { User } from '../types/user.types';
+import type { UserResponse } from '../types/user.types';
 import { api } from '@/shared/services/apiService';
 import { supabase } from '@/shared/lib/supabase';
 import { useCryptoSessionStore } from '@/store/useCryptoSessionStore';
@@ -29,177 +29,98 @@ function isEncryptedPayload(value: unknown): value is EncryptedPayload {
 }
 
 
-export async function signIn(email: string, password: string): Promise<AuthenticationResponse> {
+export async function signIn(
+  email: string,
+  password: string
+): Promise<AuthenticationResponse<AuthenticationData>> {
 
-  //await useCryptoStore.getState().initialize();
-  //const { privateKey, sessionUid } = useCryptoSessionStore.getState();
-  //if (!privateKey || !sessionUid) throw new Error('La session cryptographique est absente.');
+  const response = await api.post<AuthenticationResponse<AuthenticationData>>(
+    "/auth/login/",
+    {
+      username: email,
+      password,
+    }
+  );
 
-  const headers: Record<string, string> = { };
-  //const csrfToken = await getCsrfToken();
-  //headers['X-CSRF-Token'] = csrfToken;
+  const result = response.data;
   
-  //const { payload } = await encryptPayload({ username: email, password }, fetchPublicKey());
-  const response = await api.post<unknown>('/auth/login/', { username: email, password }, { headers });
+  if (!result.success || result.code===401) {
+    throw new Error(result.message || "Échec de la connexion.");
+  }
 
-  //if (!isEncryptedPayload(response.data)) 
-  //  throw new Error('La réponse chiffrée est invalide.');
+  const accessStorageKey = "access_token";
+  const refreshStorageKey = "refresh_token";
 
-  console.log(response)
-  const access_storage_key="access_token"
-  const refresh_storage_key="refresh_token"
-  //await encryptToken(response.data.access_token, access_storage_key);
-  //await encryptToken(response.data.refresh_token, refresh_storage_key);
-  return response.data as AuthenticationResponse;
+  await encryptToken(
+    result.data.access_token,
+    accessStorageKey
+  );
+
+  await encryptToken(
+    result.data.refresh_token,
+    refreshStorageKey
+  );
+
+  return result;
 }
 
 
 export async function deconnexion(): Promise<LogoutResponse> {
-  
-  //await useCryptoStore.getState().initialize();
-  const access_storage_key="access_token"
-  const accessToken = await decryptToken(access_storage_key);
-  const { privateKey, sessionUid } = useCryptoSessionStore.getState();
-  if (!privateKey || !sessionUid) 
-    throw new Error('La session cryptographique est absente.');
 
-  const headers: Record<string, string> = { 'X-Crypto-Session-ID': sessionUid };
-  const csrfToken = await getCsrfToken();
-  headers['X-CSRF-Token'] = csrfToken;
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
+  const accessToken = await decryptToken("access_token");
+  const refreshToken = await decryptToken("refresh_token");
+
+  if (!accessToken) {
+    throw new Error("Token d'accès absent ou invalide.");
   }
-  
-  const response = await api.post<unknown>('/auth/deconnexion', null, { headers, withCredentials: true });
 
-  if (!isEncryptedPayload(response.data)) 
-    throw new Error('La réponse chiffrée est invalide.');
+  const response = await api.post<LogoutResponse>(
+    "/auth/logout/",
+    {
+      refresh_token: refreshToken,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true,
+    }
+  );
 
-  const decrypted = await decryptServerResponse<LogoutResponse>(response.data, privateKey);
-  
-  if (!decrypted || typeof decrypted !== 'object') {
-    throw new Error('La réponse d’authentification est invalide.');
-  }
-    
-  clearToken('access_token');
-  clearToken('refresh_token');
-  return decrypted;
+  await clearToken("access_token");
+  await clearToken("refresh_token");
+
+  return response.data;
 }
 
 
+export async function getMe(): Promise<GetMeResponse> {
 
-async function requestCurrentUser(
-  //privateKey: CryptoKey,
-  //sessionUid: string, 
-  //accessToken?: string | null,
-): Promise<GetMeResponse<User>> {
+  const headers: Record<string, string> = {};
 
+  const accessStorageKey = "access_token";
+  const accessToken = await decryptToken(accessStorageKey);
 
-  //const headers: Record<string, string> = {
-  //  "X-Crypto-Session-ID": sessionUid,
-  //};
+  if (!accessToken) {
+    throw new Error("Token d'accès absent ou invalide.");
+  }
 
-  const headers: Record<string, string> = {}
-
-  //const csrfToken = await getCsrfToken();
-
-  //if (csrfToken) {
-  //  headers["X-CSRF-Token"] = csrfToken;
-  //}
-
-  //if (accessToken) {
-  //  headers.Authorization = `Bearer ${accessToken}`;
-  //}
-
-  const response = await api.get<unknown>(
-    "/auth/me/", 
+  headers.Authorization = `Bearer ${accessToken}`;
+ 
+  const response = await api.get<GetMeResponse>(
+    "/auth/me/",
     {
       withCredentials: true,
       headers,
-    },
+    }
   );
-
-  if (!isEncryptedPayload(response.data)) {
-    throw new Error(
-      "La réponse chiffrée est invalide.",
-    );
-  }
-
-  /*
-  const decrypted =
-    await decryptServerResponse<
-      GetMeResponse<User>
-    >(
-      response.data,
-      privateKey,
-    );
-
-  const {
-    code,
-    success,
-  } = decrypted;
-   */
-
-  /*
-   * L’access token est expiré, mais le refresh token
-   * est encore valide : renouveler puis refaire /auth/me.
-   */
-  /*
-  if (code==401 && success==false) {
-    const response_data =await refreshAccessToken();
-
-    const access_storage_key="access_token"
-    const newAccessToken = await decryptToken(access_storage_key);
-    return requestCurrentUser(
-      privateKey,
-      sessionUid,
-      newAccessToken
-    );
-
-  }
-    */ 
-
-  //return decrypted;
-
-  return undefined as any; // Placeholder to satisfy TypeScript, replace with actual implementation
-
   
-}
-
-export async function getMe(): Promise<
-  GetMeResponse<User>
-> {
-  //await useCryptoStore.getState().initialize();
- /*
-  const {
-    privateKey,
-    sessionUid,
-  } = useCryptoSessionStore.getState();
-
-  if (!privateKey || !sessionUid) {
-    throw new Error(
-      "La session cryptographique est absente.",
-    );
+  if ( response.data.code === 401 || response.data.success===false ) {
+    await refreshAccessToken()
+    return await getMe()
   }
-  */
-  const access_storage_key="access_token"
-  //const accessToken = await decryptToken(access_storage_key);
 
-  let decrypted = await requestCurrentUser(
-    //privateKey,
-    //sessionUid,
-    //accessToken
-  );
-  /*
-  if (decrypted.success !== true) {
-    throw new Error(decrypted.message || 'La session d’authentification a expiré.');
-  }
-  if (!decrypted.data || typeof decrypted.data.uid !== 'string'
-    || typeof decrypted.data.is_active !== 'boolean') {
-    throw new Error('La réponse utilisateur est invalide.');
-  }
-  */
-  return decrypted;
+  return response.data;
 }
 
 

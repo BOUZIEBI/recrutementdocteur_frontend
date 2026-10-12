@@ -21,9 +21,7 @@ import AjoutagentPage from './espaceagent/AjoutagentPage'
 function AuthenticatedApp() {
   const location = useLocation()
   const isLoginPage = ['/connexion', '/login'].includes(location.pathname.replace(/\/$/, ''))
-  //const initialized = useCryptoStore((state) => state.initialized)
-  //const initialize = useCryptoStore((state) => state.initialize)
-  const cryptoError = useCryptoStore((state) => state.error)
+
   const auth = useAuthStore((state) => state.auth)
   const loadAuth = useAuthStore((state) => state.loadAuth)
   const loaded = useAuthStore((state) => state.loaded)
@@ -34,12 +32,10 @@ function AuthenticatedApp() {
     return () => pageRefreshService.stop()
   }, [])
 
-
-
   useEffect(() => {
-    if (import.meta.env.DEV) 
-      console.log("")
-  }, [auth])
+    if ( isLoginPage || auth || loaded) return
+    void loadAuth()
+  }, [ isLoginPage, auth, loaded, loadAuth])
 
   if (isLoginPage) return <LoginPage />
 
@@ -47,13 +43,11 @@ function AuthenticatedApp() {
   if ( loading || (!auth && !loaded)) {
     return <main role="status">Vérification de votre session…</main>
   }
-  
-  /*
-  if (!auth?.success || auth.data?.is_active !== true) {
-    return <Navigate to="/connexion" replace state={{ from: location.pathname + location.search + location.hash }} />
+
+  if (!auth?.success || auth.code !== 200) {
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search + location.hash }} />
   }
-  */
- 
+
   return <AppLayout />
 }
 
@@ -115,19 +109,19 @@ function AppLayout() {
               <Route
                 element={
                   <ProtectedRoute
-                    permissions={[
-                      "SUPPRIMERAGENT",
-                    ]}
+                    //</Routes>permissions={[
+                    //  "SUPPRIMERAGENT",
+                    //]}
                     requireAllPermissions={true}
                   />
                 }
               >
                 <Route
-                  path="/fiche-identification/informations-generales_2"
+                  path="/fiche-identification/informations-generales"
                   element={<AgentPage title="Informations Générales" breadcrumb="Fiche d'Identification / Informations générales" />}
                 />
               </Route>
-              <Route path="/fiche-identification/informations-generales" element={<AgentPage title="Informations Générales" breadcrumb="Fiche d'Identification / Informations générales" />} />
+              
               <Route path="/fiche-identification/enfants" element={<AgentPage title="Liste des Enfants" />} />
               <Route path="/fiche-identification/services" element={<AgentPage title="Services" />} />
               <Route path="/fiche-identification/autres-services" element={<AgentPage title="Autres services" />} />

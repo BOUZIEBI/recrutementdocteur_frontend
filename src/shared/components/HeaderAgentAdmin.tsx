@@ -24,13 +24,14 @@ const HeaderAgentAdmin: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar,
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleDeconnexion = async () => {
+    console.log("Deconnexion")
     if (loggingOut) return;
-    setLoggingOut(true);
+    //setLoggingOut(true);
     setLogoutError(null);
     try {
       await deconnexion();
       useAuthStore.getState().clearAuth();
-      navigate('/connexion', { replace: true });
+      navigate('/login', { replace: true });
     } catch (error) {
       setLogoutError(error instanceof Error ? error.message : 'Impossible de se déconnecter.');
     } finally {
