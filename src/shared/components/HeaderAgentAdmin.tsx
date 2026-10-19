@@ -5,6 +5,7 @@ import '../styles/authenticatedapp/HeaderAgentAdmin.css';
 
 import { useAuthStore } from '@/store/useAuthStore';
 import { deconnexion } from '@/features/auth/api/auth.api';
+import { HiOutlineCog } from 'react-icons/hi';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -114,12 +115,9 @@ const HeaderAgentAdmin: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar,
                   </svg>
                   <span>Changer le mot de passe</span>
                 </Link>
-                <Link to={isAdministration ? '/dashboard' : '/administration/dashboard'} className="user-dropdown-link" onClick={() => setUserMenuOpen(false)}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M12 3 3 7v5c0 5 9 9 9 9s9-4 9-9V7l-9-4Z" />
-                    <path d="m8 12 3 3 5-5" />
-                  </svg>
-                  <span>{isAdministration ? 'Mon Espace Agent' : 'Mon espace administrateur'}</span>
+                <Link to="#" className="user-dropdown-link" onClick={() => setUserMenuOpen(false)}>
+                  <span><HiOutlineCog /></span>
+                  <span>Paramètres</span>
                 </Link>
                 <button type="button" disabled={loggingOut} className="user-dropdown-link user-dropdown-logout" onClick={() => void handleDeconnexion()}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -27,28 +27,11 @@ export default function LoginForm() {
   } = useAuth();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="login-bg-zoom absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              'url(https://images.pexels.com/photos/8014860/pexels-photo-8014860.jpeg?auto=compress&cs=tinysrgb&w=1920)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-green-900/85 via-green-800/75 to-gray-900/85" />
-      </div>
-
-      <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none">
-        <div className="login-text-marquee whitespace-nowrap text-white/10 font-bold text-[180px] sm:text-[260px] tracking-tight leading-none select-none">
-          DRH-MESRS · DRH-MESRS · DRH-MESRS · DRH-MESRS
-        </div>
-      </div>
-
-      <div className="relative z-10 w-full max-w-md mx-auto px-4 sm:px-6 py-32">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+      <div className="relative z-10 w-full max-w-md mx-auto px-4 sm:px-6 py-16">
         <button
           onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 text-sm font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour à l'accueil
@@ -67,7 +50,7 @@ export default function LoginForm() {
               {mode === 'signin' ? 'Connexion' : 'Créer un compte'}
             </h1>
             <p className="text-white/80 text-sm">
-              Mon Espace Agent DRH-MESRS
+              Mon Espace Candidat
             </p>
           </div>
 
@@ -160,12 +143,12 @@ export default function LoginForm() {
             <div className="mt-6 text-center text-sm text-gray-500">
               {mode === 'signin' ? (
                 <>
-                  Vous n'avez pas encore d'espace Agent DRH-MESRS ?{' '}
+                  Vous n'avez pas encore d'espace Candidat ?{' '}
                   <button
                     onClick={() => navigate('/preinscription')}
                     className="text-orange-600 hover:text-orange-700 font-semibold transition-colors"
                   >
-                    Se préinscrire
+                    S'inscrire
                   </button>
                 </>
               ) : (

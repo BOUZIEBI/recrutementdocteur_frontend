@@ -33,7 +33,7 @@ export default function ProtectedGuestRoute() {
   if ( isAuthenticated  ) {
     return (
       <Navigate
-        to="/fiche-identification/informations-generales"
+        to="/dashboard"
         replace
       />
     );

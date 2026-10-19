@@ -5,6 +5,7 @@
 :root {
   --color-danger: #c0392b;
   --color-accent: #FC6C0C;
+  --color-ligth: #f87e2d;
   --color-info: #3498db;
   --color-overlay: #0007;
 }
@@ -25,6 +26,73 @@
 
 .login-text-marquee {
   animation: textMarquee 18s linear infinite;
+}
+
+@keyframes recrutementSessionMarquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.conteneur-recrutement-session{
+  width: 100%;
+}
+
+.recrutement-session-marquee {
+  display: inline-block;
+  width: 100%;
+  color: rgb(1, 95, 1);
+  animation: recrutementSessionMarquee 18s linear infinite;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
+.conteneur-recrutement-drh-mesrs{
+  margin-top: 20px;
+  background-color: #ffffff;
+}
+.conteneur-block-image-recrutement{
+  margin-top: 20px;
+  padding: 2rem;
+  min-height: 28rem;
+  background-color: #ffffff;
+}
+
+.conteneur-recrutement-liens{
+  padding: 0!important;
+  margin: 0!important;
+  background-color:inherit;
+}
+
+.conteneur-image-recrutement{
+  background-color:inherit;
+}
+.conteneur-recrutement-liens .conteneur-recrutement-lien-1{
+  padding: 10px;
+  margin-top: 10px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+.conteneur-recrutement-liens .conteneur-recrutement-lien-2{
+ padding: 10px;
+ margin-top: 10px;
+ box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.conteneur-recrutement-drh-mesrs-footer h1{
+  font-size: 2rem;
+  font-weight: 800;
+  color: #37353E;
+}
+.conteneur-recrutement-drh-mesrs-footer p{
+  color: #37353E;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recrutement-session-marquee {
+    animation: none;
+    white-space: normal;
+  }
 }
 
 @keyframes chatIn {

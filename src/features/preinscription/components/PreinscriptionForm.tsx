@@ -32,41 +32,14 @@ export default function PreinscriptionForm() {
   } = usePreinscription();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="login-bg-zoom absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              'url(https://images.pexels.com/photos/8014860/pexels-photo-8014860.jpeg?auto=compress&cs=tinysrgb&w=1920)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-green-900/85 via-green-800/75 to-gray-900/85" />
-      </div>
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 py-16">
 
-      <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none">
-        <div className="login-text-marquee whitespace-nowrap text-white/10 font-bold text-[180px] sm:text-[260px] tracking-tight leading-none select-none">
-          DRH-MESRS · DRH-MESRS · DRH-MESRS · DRH-MESRS
-        </div>
-      </div>
-
-      <div className="relative z-10 w-full max-w-lg mx-auto px-4 sm:px-6 py-32">
-        <button
-          onClick={() => navigate('/login')}
-          className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 text-sm font-medium transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Retour à la connexion
-        </button>
-
-        <div className="bg-white rounded-3xl shadow-2xl shadow-black/30 border border-white/20 overflow-hidden">
+        <div className="bg-white rounded-3xl  border border-gray overflow-hidden">
           <div className="bg-gradient-to-br from-green-700 to-green-800 p-8 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-white/15 rounded-2xl mb-4">
-              <UserPlus className="w-7 h-7 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-1">Préinscription</h1>
+            <h1 className="text-2xl font-bold text-white mb-1">Inscription</h1>
             <p className="text-white/80 text-sm">
-              Créez votre espace agent DRH-MESRS
+              Créez votre espace candidat
             </p>
           </div>
 
@@ -261,15 +234,6 @@ export default function PreinscriptionForm() {
               </button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-500">
-              Déjà un Espace Agent DRH-MESRS ?{' '}
-              <button
-                onClick={() => navigate('/login')}
-                className="text-orange-600 hover:text-orange-700 font-semibold transition-colors"
-              >
-                Se connecter
-              </button>
-            </div>
           </div>
         </div>
       </div>

@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logoMesrs from '@/assets/logomesrs.png';
-
-import logoMesrsUnique from '@/assets/logomesrsunique.png';
 import '../styles/authenticatedapp/SidebarAgentAdmin.css';
-import { FiHome, FiClipboard, FiUser, FiCalendar, FiRepeat, FiFileText, FiAward, FiHeart } from 'react-icons/fi';
+import { FiHome, FiClipboard, FiUser, FiCalendar, FiHeart, FiGrid, FiLayers } from 'react-icons/fi';
 import { CgPlayButton } from "react-icons/cg";
 
 interface NavItem {
@@ -12,6 +10,7 @@ interface NavItem {
   label: string;
   icon?: React.ReactNode;
   subItems?: NavItem[];
+  isPrimary?: boolean;
 }
 
 interface SidebarProps {
@@ -22,50 +21,62 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, items }) => {
   const { pathname } = useLocation();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
   const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
 
   const navItems: NavItem[] = [
-    { id: 'dashboard', label: 'Accueil', icon: <FiHome className="nav-icon" /> },
-    { id: 'resume-fiche-identification', label: 'Résumé Fiche d’identification', icon: <FiClipboard className="nav-icon" /> },
     {
-      id: 'fiche-identification',
-      label: 'Fiche d’identification',
-      icon: <FiUser className="nav-icon" />,
+      id: 'dashboards-menu',
+      label: 'Dashboards',
+      icon: <FiGrid className="nav-icon" />,
+      isPrimary: true,
       subItems: [
-        { id: 'fiche-identification/informations-generales', label: 'Informations Générales' },
-        { id: 'fiche-identification/enfants', label: 'Liste des Enfants' },
-        { id: 'fiche-identification/services', label: 'Services' },
-        { id: 'fiche-identification/autres-services', label: 'Autres services' },
-        { id: 'fiche-identification/etudes-formations-diplomes', label: 'Études, Formations professionnelles, Diplômes' },
-        { id: 'fiche-identification/stages-colloques', label: 'Stage, Colloque' },
-        { id: 'fiche-identification/enseignements', label: 'Enseignements dispensés' },
-        { id: 'fiche-identification/publications', label: 'Publications' },
-        { id: 'fiche-identification/activites-recherche', label: 'Activités de recherches' },
-        { id: 'fiche-identification/emplois', label: 'Emplois occupés' },
-        { id: 'fiche-identification/fonctions', label: 'Fonctions occupées' },
-        { id: 'fiche-identification/competences', label: 'Résumé des compétences' },
-        { id: 'fiche-identification/autres-renseignements', label: 'Autres renseignements' },
-        { id: 'fiche-identification/consultation', label: 'Consultation de la fiche d’identification' },
+        { id: 'dashboard', label: 'Accueil', icon: <FiHome className="nav-icon" /> },
       ],
     },
-    { id: 'presences', label: 'Présences', icon: <FiCalendar className="nav-icon" /> },
-    { id: 'mouvements', label: 'Mouvements', icon: <FiRepeat className="nav-icon" /> },
-    { id: 'attestations', label: 'Attestations', icon: <FiFileText className="nav-icon" /> },
-    { id: 'certificats', label: 'Certificats', icon: <FiAward className="nav-icon" /> },
-    { id: 'prestation-sociale', label: 'Prestation sociale et autres', icon: <FiHeart className="nav-icon" /> },
+    {
+      id: 'administration-menu',
+      label: 'Administration',
+      icon: <FiLayers className="nav-icon" />,
+      isPrimary: true,
+      subItems: [
+        { id: 'resume-fiche-identification', label: 'Candidats', icon: <FiClipboard className="nav-icon" /> },
+        { id: 'fiche-identification', label: 'Dossiers', icon: <FiUser className="nav-icon" /> },
+        { id: 'presences', label: 'Vérification', icon: <FiCalendar className="nav-icon" /> },
+        { id: 'espace/candidats/liste', label: 'Historiques', icon: <FiHeart className="nav-icon" /> },
+      ],
+    },
   ];
 
+  const navItemsToRender = items ?? navItems;
+  const isSubItemActive = (item: NavItem) =>
+    item.subItems?.some((subItem) => {
+      const path = `/${subItem.id}`;
+      return pathname === path || pathname.startsWith(`${path}/`);
+    }) ?? false;
+
   // Derive the open parent from the URL so refreshes keep the active submenu visible.
-  const activeParentId = (items ?? navItems).find((item) =>
-    item.subItems?.some((subItem) => pathname === `/${subItem.id}`)
-  )?.id;
-  const isExpanded = (id: string) => expandedItems.includes(id) || activeParentId === id;
+  const activeParentId = navItemsToRender.find(isSubItemActive)?.id;
+  const isExpanded = (id: string) => {
+    const item = navItemsToRender.find((navItem) => navItem.id === id);
+    return item?.isPrimary === true
+      || (!collapsedItems.includes(id) && (expandedItems.includes(id) || activeParentId === id));
+  };
+
+  useEffect(() => {
+    setCollapsedItems([]);
+  }, [pathname]);
 
   const toggleExpand = (id: string) => {
     setOpenSubmenuId(null);
-    setExpandedItems((prev) =>
-      prev.includes(id) ? [] : [id]
-    );
+    if (isExpanded(id)) {
+      setExpandedItems((prev) => prev.filter((expandedId) => expandedId !== id));
+      setCollapsedItems((prev) => prev.includes(id) ? prev : [...prev, id]);
+      return;
+    }
+
+    setCollapsedItems((prev) => prev.filter((collapsedId) => collapsedId !== id));
+    setExpandedItems([id]);
   };
 
   return (
@@ -73,25 +84,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, items }) => {
       <div className="sidebar-header">
         <Link to="/" aria-label="Retour à l’accueil du site vitrine" className="block">
         {!isOpen ? 
-        <img className="sidebar-logo" src={logoMesrsUnique} alt="MESRS" />:
+        <img className="sidebar-logo" src={logoMesrs} alt="MESRS" />:
         <img className="sidebar-logo" src={logoMesrs} alt="Ministère de l’Enseignement supérieur et de la Recherche scientifique" />
         }
         </Link>
       </div>
       <nav className="sidebar-nav">
         <ul>
-          {(items ?? navItems).map((item) => (
+          {navItemsToRender.map((item) => (
             <li key={item.id}>
               <div className="nav-item-container">
                 {item.subItems ? <button
-                  className={`nav-link ${item.subItems.some((subItem) => pathname === `/${subItem.id}`) ? 'active' : ''}`}
+                  className={`nav-link ${item.isPrimary ? 'nav-section-link' : ''} ${isSubItemActive(item) ? 'active' : ''}`}
                   onClick={() => {
                     if (item.subItems && item.subItems.length > 0) {
                       if (!isOpen) {
                         // Si sidebar réduit, afficher le menu contextuel
                         setExpandedItems([]);
-                        setOpenSubmenuId((prev) => prev === item.id ? null : item.id);
-                      } else {
+                        setOpenSubmenuId(item.id);
+                      } else if (!item.isPrimary) {
                         // Si sidebar ouvert, dérouler/replier normalement
                         toggleExpand(item.id);
                       }
@@ -118,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, items }) => {
                     <span>{item.label}</span>
                   </NavLink>
                 )}
-                {item.subItems && item.subItems.length > 0 && (
+                {item.subItems && item.subItems.length > 0 && !item.isPrimary && (
                   <button
                     className="expand-btn"
                     onClick={() => toggleExpand(item.id)}
@@ -131,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, items }) => {
                 )}
               </div>
               {item.subItems && !isOpen && openSubmenuId === item.id && (
-                <div className="submenu-popup" style={{ top: `${((items ?? navItems).indexOf(item) * 56) + 90}px`, maxHeight: `calc(100dvh - ${((items ?? navItems).indexOf(item) * 56) + 106}px)` }}>
+                <div className="submenu-popup" style={{ top: `${(navItemsToRender.indexOf(item) * 56) + 90}px`, maxHeight: `calc(100dvh - ${(navItemsToRender.indexOf(item) * 56) + 106}px)` }}>
                   <ul className="submenu-popup-list">
                     {item.subItems.map((subItem) => (
                       <li key={subItem.id}>

@@ -26,7 +26,7 @@ export function useAuthMutation() {
     onSuccess: ({ mode }) => {
       if (mode === 'signin') {
         navigate(
-            "/fiche-identification/informations-generales",
+            "/dashboard",
             {
               replace: true,
             },

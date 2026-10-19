@@ -16,6 +16,7 @@ import '@/shared/styles/authenticatedapp/Sidebar.css'
 import ProtectedRoute from '@/routes/ProtectedRoute'
 import ListeagentsPage from './espaceagent/ListeagentsPage'
 import AjoutagentPage from './espaceagent/AjoutagentPage'
+import ListehistoriquesPage from './espacehistorique/ListehistoriquePage'
 
 
 function AuthenticatedApp() {
@@ -104,6 +105,7 @@ function AppLayout() {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/resume-fiche-identification" element={<AgentPage title="Résumé Fiche d’identification" />} />
+              
               <Route path="/fiche-identification" element={<Navigate to="/fiche-identification/informations-generales"  replace />} />
               
               <Route
@@ -121,6 +123,22 @@ function AppLayout() {
                   element={<AgentPage title="Informations Générales" breadcrumb="Fiche d'Identification / Informations générales" />}
                 />
               </Route>
+
+              <Route
+                element={
+                  <ProtectedRoute
+                    //</Routes>permissions={[
+                    //  "SUPPRIMERAGENT",
+                    //]}
+                    requireAllPermissions={true}
+                  />
+                }
+              >
+                <Route
+                  path="/espace/candidats/liste"
+                  element={<ListehistoriquesPage title="Liste des candidats" breadcrumb="Historiques / Liste des candidats" />}
+                />
+              </Route>
               
               <Route path="/fiche-identification/enfants" element={<AgentPage title="Liste des Enfants" />} />
               <Route path="/fiche-identification/services" element={<AgentPage title="Services" />} />
@@ -135,6 +153,7 @@ function AppLayout() {
               <Route path="/fiche-identification/competences" element={<AgentPage title="Résumé des compétences" />} />
               <Route path="/fiche-identification/autres-renseignements" element={<AgentPage title="Autres renseignements" />} />
               <Route path="/fiche-identification/consultation" element={<AgentPage title="Consultation de la fiche d’identification" />} />
+
               <Route path="/presences" element={<AgentPage title="Présences" />} />
               <Route path="/mouvements" element={<AgentPage title="Mouvements" />} />
               <Route path="/attestations" element={<AgentPage title="Attestations" />} />
@@ -179,6 +198,21 @@ function AppLayout() {
                 />
               </Route>
 
+              <Route
+                element={
+                  <ProtectedRoute
+                    permissions={[
+                      "CONSULTERAGENT",
+                    ]}
+                    requireAllPermissions={true}
+                  />
+                }
+              >
+                <Route
+                  path="/espace/candidats/liste"
+                  element={<AjoutagentPage  title="Liste des agents" breadcrumb="Historiques / Liste des candidats" />}
+                />
+              </Route>
 
               <Route path="/administration/agents/absences" element={<AdministrationPage title="Gestion des absences" />} />
               <Route path="/administration/agents/mouvements" element={<AdministrationPage title="Gestion des Mouvements" />} />

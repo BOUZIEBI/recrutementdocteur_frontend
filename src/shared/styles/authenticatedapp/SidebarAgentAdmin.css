@@ -28,7 +28,7 @@
   padding-bottom: 5px;
   padding-top: 5px;
   border-bottom: 0px solid #fff;
-  background-color: #E88A1A;
+  background-color: #fff;
 }
 
 .sidebar-logo {
@@ -108,6 +108,23 @@
 
 .nav-link:hover {
   text-decoration: none;
+}
+
+.nav-link.nav-section-link,
+.nav-link.nav-section-link.active {
+  background-color: #fff;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.nav-item-container:hover > .nav-link.nav-section-link,
+.nav-link.nav-section-link:hover {
+  background-color: #eff6ff;
+  color: #1e40af;
+}
+
+.nav-item-container:has(> .nav-link.nav-section-link) > .expand-btn {
+  color: #1d4ed8;
 }
 
 a.nav-link:hover {

@@ -23,11 +23,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Liens utiles</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/" className="hover:text-orange-400 transition-colors">Accueil</Link></li>
-              <li><Link to="/presentation" className="hover:text-orange-400 transition-colors">Présentation</Link></li>
-              <li><Link to="/services" className="hover:text-orange-400 transition-colors">Nos services</Link></li>
               <li><Link to="/recrutement" className="hover:text-orange-400 transition-colors">Recrutement</Link></li>
-              <li><Link to="/sygrhes" className="hover:text-orange-400 transition-colors">SYGRH</Link></li>
-              <li><Link to="/contacts" className="hover:text-orange-400 transition-colors">Contacts</Link></li>
             </ul>
           </div>
 
