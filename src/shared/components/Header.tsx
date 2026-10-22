@@ -30,16 +30,12 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-24">
           <button onClick={handleLogoClick} className="flex items-center">
             <img
-              src="/logodrh.png"
-              alt="DRH — Direction des Ressources Humaines"
-              className="h-20 w-auto object-contain"
+              src="/logomesrs.png"
+              alt="MESRS — Ministère de l'Enseignement Supérieur et de la Recherche Scientifique"
+              className="h-22 w-auto object-contain"
             />
           </button>
-          <img
-            src="/logomesrs.png"
-            alt="MESRS — Ministère de l'Enseignement Supérieur et de la Recherche Scientifique"
-            className="h-20 w-auto object-contain"
-          />
+         
         </div>
       </div>
 
