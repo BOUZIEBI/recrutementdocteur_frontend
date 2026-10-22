@@ -35,7 +35,7 @@ export async function refreshAccessToken(): Promise<RefreshResponse> {
       },
     }
   );
-  console.log(data)
+
   // Vérifier la réponse
   if (!data?.access) {
     throw new Error("Impossible de rafraîchir le token.");

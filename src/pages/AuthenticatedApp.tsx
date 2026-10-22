@@ -134,10 +134,10 @@ function AppLayout() {
                   />
                 }
               >
-                <Route
-                  path="/espace/candidats/liste"
-                  element={<ListehistoriquesPage title="Liste des candidats" breadcrumb="Historiques / Liste des candidats" />}
-                />
+              <Route
+                path="/historiques/candidats/liste"
+                element={<ListehistoriquesPage title="Liste des candidats" breadcrumb="Historiques / Liste des candidats" />}
+              />
               </Route>
               
               <Route path="/fiche-identification/enfants" element={<AgentPage title="Liste des Enfants" />} />

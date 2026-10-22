@@ -187,7 +187,7 @@ function ListehistoriquesPage({ title, breadcrumb }: { title: string; breadcrumb
     <div>
       <div className="titre-libelle-page">
         <h3>Système de Recrutement des Enseignement du Supérieur</h3>
-        <p>Espace Administrateur : <b>ADMINISTRATION CENTRALISÉE</b></p>
+        <p> <b>Espace Administrateur</b></p>
         <PageBreadcrumb fallback={title} override={breadcrumb} />
       </div>
       <div className="content-section">

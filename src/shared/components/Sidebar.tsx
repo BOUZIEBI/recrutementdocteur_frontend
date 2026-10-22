@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, items }) => {
         { id: 'resume-fiche-identification', label: 'Candidats', icon: <FiClipboard className="nav-icon" /> },
         { id: 'fiche-identification', label: 'Dossiers', icon: <FiUser className="nav-icon" /> },
         { id: 'presences', label: 'Vérification', icon: <FiCalendar className="nav-icon" /> },
-        { id: 'espace/candidats/liste', label: 'Historiques', icon: <FiHeart className="nav-icon" /> },
+        { id: 'historiques/candidats/liste', label: 'Historiques', icon: <FiHeart className="nav-icon" /> },
       ],
     },
   ];

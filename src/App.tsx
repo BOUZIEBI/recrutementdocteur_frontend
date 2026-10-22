@@ -35,7 +35,7 @@ export default function App() {
     'dashboard', 'resume-fiche-identification', 'fiche-identification',
     'presences', 'mouvements', 'attestations', 'certificats',
     'prestation-sociale', 'liste-utilisateurs', 'ajouter-utilisateur',
-    'administration', 'espace',
+    'administration', 'espace', 'historiques',
   ];
 
   return privateSections.includes(section) ? <AuthenticatedApp /> : <PublicApp />;

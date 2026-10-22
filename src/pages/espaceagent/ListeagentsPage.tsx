@@ -38,8 +38,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
   const [currentPage, setCurrentPage] = useState(1);
   const [openActionsAgentId, setOpenActionsAgentId] = useState<string | null>(null);
   const actionsMenuRef = useRef<HTMLDivElement>(null);
-  console.log("----------- agentData ---------------")
-  console.log(agentData)
+
   useEffect(() => {
     void loadAgents();
   }, [loadAgents]);
@@ -105,7 +104,7 @@ function ListeagentsPage({ title, breadcrumb }: { title: string; breadcrumb?: st
     <div>
       <div className="titre-libelle-page">
         <h3>Système de Gestion des Ressources Humaines du MESRS</h3>
-        <p>Espace Administrateur : <b>ADMINISTRATION CENTRALE</b></p>
+        <p> <b>Espace Administrateur</b></p>
         <PageBreadcrumb fallback={title} override={breadcrumb} />
       </div>
       <div className="content-section">
