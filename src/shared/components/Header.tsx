@@ -32,7 +32,7 @@ export default function Header() {
             <img
               src="/logomesrs.png"
               alt="MESRS — Ministère de l'Enseignement Supérieur et de la Recherche Scientifique"
-              className="h-22 w-auto object-contain"
+              className="h-22 w-auto object-contain "
             />
           </button>
          
