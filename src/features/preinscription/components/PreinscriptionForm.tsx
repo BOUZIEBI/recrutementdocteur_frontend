@@ -7,7 +7,6 @@ import {
   Mail,
   Lock,
   Camera,
-  ArrowLeft,
   Loader2,
   AlertCircle,
   CheckCircle2,
@@ -32,15 +31,38 @@ export default function PreinscriptionForm() {
   } = usePreinscription();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
-      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 py-16">
+    <section className="relative min-h-screen flex items-center overflow-hidden mt-8 bg-white">
+      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 py-8">
 
-        <div className="bg-white rounded-3xl  border border-gray overflow-hidden">
-          <div className="bg-gradient-to-br from-green-700 to-green-800 p-8 text-center">
-            <h1 className="text-2xl font-bold text-white mb-1">Inscription</h1>
-            <p className="text-white/80 text-sm">
-              Créez votre espace candidat
-            </p>
+        <div className="bg-white rounded-3xl overflow-hidden">
+          <div className=" p-8 text-center">
+            <h1 className="text-3xl font-bold text-[#0a1317]  mb-1">Inscription</h1>
+            <p className="text-[#5d6c7b] text-sm mb-6">Inscrivez-vous au concours de recrutement des enseignants du supérieur session complementaire 2026</p>
+            <ol className="lister-etapes grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left" aria-label="Étapes de préinscription">
+              {[
+                'Informations personnelles',
+                'Choix du concours',
+                'Réception du code de validation',
+                'Paiement des frais du concours',
+              ].map((step, index) => (
+                <li
+                  key={step}
+                  aria-current={index === 0 ? 'step' : undefined}
+                  className={`flex items-start gap-3 rounded-xl border p-4 text-sm ${
+                    index === 0
+                      ? 'border-orange-500 bg-orange-50 text-orange-800'
+                      : 'border-gray-200 bg-white text-gray-500'
+                  }`}
+                >
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-semibold ${
+                    index === 0 ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {index + 1}
+                  </span>
+                  <span className="pt-1 font-medium">{step}</span>
+                </li>
+              ))}
+            </ol>
           </div>
 
           <div className="p-8">
@@ -218,20 +240,24 @@ export default function PreinscriptionForm() {
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3.5 rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 inline-flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    <UserPlus className="w-5 h-5" />
-                    Se préinscrire
-                  </>
-                )}
-              </button>
+              <div className="flex flex-row justify-start gap-3 border-t border-gray-100 pt-5 ">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  disabled={loading}
+                  className="rounded-xl border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition-all duration-200 hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-500/40 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                  Étape suivante
+                </button>
+              </div>
             </form>
 
           </div>

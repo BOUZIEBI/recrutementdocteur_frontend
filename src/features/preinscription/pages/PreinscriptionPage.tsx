@@ -3,9 +3,15 @@ import ProceduresConditions from '@/features/home/components/ProceduresCondition
 
 export default function PreinscriptionPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <ProceduresConditions />
-      <PreinscriptionForm />
-    </div>
+    <section className="pt-2 pb-24 bg-gray-50 ">
+          <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="">
+    
+              <ProceduresConditions />
+              <PreinscriptionForm />
+    
+            </div>
+          </div>
+    </section>
   );
 }

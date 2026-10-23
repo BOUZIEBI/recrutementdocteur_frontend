@@ -2,8 +2,8 @@ import { FaBuilding, FaFilePdf } from 'react-icons/fa6';
 
 export default function ProceduresConditions() {
   return (
-    <div className="conteneur-procedures-conditions lg:col-span-3 space-y-5 rounded-lg bg-white mt-2 p-6 shadow-sm">
-      <div className="flex flex-col lg:flex-row items-center justify-start gap-4 conteneur-icon-procedures-conteneurs">
+    <div className="conteneur-procedures-conditions lg:col-span-3 space-y-5 rounded-lg  p-6 bg-white mt-4 mb-2 shadow-sm">
+      <div className="flex flex-col lg:flex-row items-center justify-start gap-4 conteneur-icon-procedures-conteneurs ">
         <div>
           <FaBuilding size={40} />
         </div>

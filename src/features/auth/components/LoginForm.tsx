@@ -27,7 +27,7 @@ export default function LoginForm() {
   } = useAuth();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gray-50 ">
       <div className="relative z-10 w-full max-w-md mx-auto px-4 sm:px-6 py-16">
         <button
           onClick={() => navigate('/')}
@@ -85,7 +85,7 @@ export default function LoginForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="agent@mesrs.gouv.ci"
-                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -106,7 +106,7 @@ export default function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-11 pr-11 py-3 rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                    className="w-full pl-11 pr-11 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   />
                   <button
                     type="button"

@@ -61,7 +61,7 @@ function PublicApp() {
   }, [ isLoginPage, auth, loadAuth]);
  
   return (
-    <div className={`min-h-screen ${isAuthenticationPage ? 'bg-white' : 'bg-gray-200'} font-sans antialiased`}>
+    <div className={`min-h-screen ${isAuthenticationPage ? 'bg-white' : 'bg-gray-50'} font-sans antialiased`}>
       <ScrollToTop />
       <div className="relative max-w-8xl mx-auto bg-white shadow-2xl min-h-screen flex flex-col">
         <Header />
